@@ -1,0 +1,56 @@
+<tp>
+  <langage>java</langage>
+  <compilation>
+    <command>javac MaClass.java</command>
+    <point>2</point>
+  </compilation>
+  <test>
+    <type>assert</type>
+    <function>add(1,2)</function>
+    <result>3</result>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>assert</type>
+    <function>sub(5,2)</function>
+    <result>3</result>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>assert</type>
+    <function>add(-2,2)</function>
+    <result>0</result>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>assert</type>
+    <function>sub(-2,2)</function>
+    <result>-4</result>
+    <points>2</points>
+  </test>
+
+
+  <test>
+    <type>assert</type>
+    <function>divide(6,2)</function>
+    <result>3.0</result>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>assert</type>
+    <function>divide(0,0)</function>
+    <result>0</result>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>assert</type>
+    <function>concatenate("aaa","bbb")</function>
+    <result>"aaabbb"</result>
+    <points>2</points>
+  </test>
+</tp>

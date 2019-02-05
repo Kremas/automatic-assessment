@@ -1,0 +1,15 @@
+<tp>
+  <test>
+    <type>motif</type>
+    <motif>interface FastEthernet0/1</motif>
+    <motif>ip address 10.5.22.1 255.255.255.252</motif>
+    <points>2</points>
+  </test>
+  <test>
+    <type>motif</type>
+    <motif>router ospf 1</motif>
+    <motif>network 10.5.22.0 0.0.0.3 area 0</motif>
+    <motif>network 10.5.123.0 0.0.0.3 area 0</motif>
+    <points>3</points>
+  </test>
+</tp>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="tp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="langage" type="xs:string"/>
+        <xs:element name="compilation">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="command" type="xs:string"/>
+              <xs:element name="point" type="xs:integer"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="test" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+            <xs:element name="type">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="assert"/>
+                  <xs:enumeration value="script"/>
+                  <xs:enumeration value="motif"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:choice>
+              <xs:sequence>
+                <xs:element name="file" type="xs:string"/>
+              </xs:sequence>
+              <xs:sequence>
+                <xs:choice>
+                  <xs:sequence>
+                    <xs:element name="function"/>
+                    <xs:element name="result"/>
+                  </xs:sequence>
+                  <xs:sequence>
+                    <xs:element name="motif" type="xs:string"/>
+                  </xs:sequence>
+                </xs:choice>
+                <xs:element name="points"/>
+              </xs:sequence>
+            </xs:choice>
+          </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
