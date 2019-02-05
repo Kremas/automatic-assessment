@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>Correction automatique</title>
+      <link rel="stylesheet" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<form id="form" method="POST" action="/import" class="container" enctype="multipart/form-data">
+		<div class="form-group">
+			{{ form.csrf_token }}
+			{{ form.langage(class="form-control") }}
+		</div>
+		<div class="form-group">
+			{% for test in form.tests %}
+				<div class="form-group form-row">
+					<div class="col-auto">
+						{{ test.csrf_token }}
+					</div>
+					<div class="col-auto">
+						{{ test.test_type(class="form-control type") }}
+					</div>
+					<div class="col-auto">
+						{{ test.points(class="form-control", placeholder="Points") }}
+						{% if 'points' in test.errors %}
+							<span>{{ test.errors['points'][0] }}</span>
+						{% endif %}
+					</div>
+					<div class="col-auto">
+						{{ test.a }}
+					</div>
+				</div>
+			{% endfor %}
+			<button id="add" class="form-control">Plus</button>
+		</div>
+		<div class="form-group">
+			{{ form.submit }}
+		</div>
+	</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).on('change', 'select.type',function() {
+		$.post('/add', $('#form').serialize(), function(data) {
+			console.log(data)
+		})
+	});
+</script>
+</body>
+</html>
