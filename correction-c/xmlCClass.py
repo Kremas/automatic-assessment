@@ -3,11 +3,12 @@
 
 """
 Remarques :
- - Ce code créé un fichier 'calc_test.c' qui peut être utilisé pour tester le code C 'calc.c'
-   avec la commande 'make' puis './calc_test'. Attention à utiliser un fichier XML valide, généré
+ - Ce code créé un fichier 'calc_test.c' qui peut être utilisé pour tester le
+   code C 'calc.c' avec la commande 'make' puis './calc_test'. Attention à
+   utiliser un fichier XML valide, généré
    par le formulaire wtform. Ne pas oublier le 'make clean' après le test.
- - Les points à attribuer à chaque réussite de test sont stockés dans le dictionnaire
-   mais non utilisés pour le moment.
+ - Les points à attribuer à chaque réussite de test sont stockés dans le 
+   dictionnaire mais non utilisés pour le moment.
 """
 from lxml import etree
 import re
@@ -91,7 +92,8 @@ class C(object):
                     func = (child[1].text).split('(')[0]
                     if func not in self.func:
                         self.func[func] = []
-                    self.func[func].append({child[1].text: [child[2].text, child[3].text]})
+                    self.func[func].append({child[1].text: [child[2].text,
+                                                            child[3].text]})
 
         # Génération des fonctions de test
         for elem in self.func:
@@ -99,12 +101,15 @@ class C(object):
             for x in self.func[elem]:
                 for key, value in x.items():
                     if "\"" in value[0]:
-                        self.case_functions += "    CU_ASSERT_STRING_EQUAL(" + key + ", " + value[0] + ");\n"
+                        self.case_functions += "    CU_ASSERT_STRING_EQUAL("
+                        + key + ", " + value[0] + ");\n"
                     else:
                         if(is_int(value[0])):
-                            self.case_functions += "    CU_ASSERT_EQUAL(" + key + ", " + value[0] + ");\n"
+                            self.case_functions += "    CU_ASSERT_EQUAL("
+                            + key + ", " + value[0] + ");\n"
                         elif(is_float(value[0])):
-                            self.case_functions += "    CU_ASSERT_DOUBLE_EQUAL(" + key + ", " + value[0] + ", 0.001);\n"
+                            self.case_functions += "    CU_ASSERT_DOUBLE_EQUAL("
+                            + key + ", " + value[0] + ", 0.001);\n"
                         else:
                             print("Error : result must be one of the following types : string, int, float")
                             exit(-1)
@@ -115,17 +120,21 @@ class C(object):
             i += 1
             # Si on a qu'un seul test
             if(len(self.func) == 1):
-                self.add_suite += "    if ((NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test))\n"
+                self.add_suite += "    if ((NULL == CU_add_test(pSuite, \""
+                + elem + "_test\", " + elem + "_test))\n"
             else:  # sinon
                 # si on est sur le premier test
                 if(i == 1):
-                    self.add_suite += "    if ((NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test)) ||\n"
+                    self.add_suite += "    if ((NULL == CU_add_test(pSuite, \""
+                    + elem + "_test\", " + elem + "_test)) ||\n"
                 # sinon si c'est ni le premier ni le dernier test
                 elif(i < (len(self.func))):
-                    self.add_suite += "        (NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test)) ||\n"
+                    self.add_suite += "        (NULL == CU_add_test(pSuite, \""
+                    + elem + "_test\", " + elem + "_test)) ||\n"
                 # sinon c'est le dernier test
                 else:
-                    self.add_suite += "        (NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test))\n"
+                    self.add_suite += "        (NULL == CU_add_test(pSuite, \""
+                    + elem + "_test\", " + elem + "_test))\n"
 
         self.add_suite += ("       )\n"
                            "    {\n"
@@ -136,7 +145,8 @@ class C(object):
                            )
 
     def toString(self):
-        return self.header + self.case_functions + self.main + self.add_suite + self.footer
+        return self.header + self.case_functions + self.main + self.add_suite
+        + self.footer
 
     def toFile(self, path='.'):
         with open(path + '/' + self.classname + '_test.c', 'w') as f:
