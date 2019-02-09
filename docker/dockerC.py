@@ -79,7 +79,7 @@ print('Launching the {} containers...'.format(len(STUDENT)))
 
 # run a container for each student
 for elem in STUDENT:
-    vol = {getcwd() + '/' + elem: {'bind': '/usr/src/myapp', 'mode': 'rw'}}
+    vol = {getcwd() + '/' + elem: {'bind': '/usr/src/myapp', 'mode': 'ro'}}
     container = ''
 
     try:
