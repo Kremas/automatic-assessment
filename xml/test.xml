@@ -23,6 +23,12 @@
     <points>2</points>
   </test>
   <test>
+    <type>assert</type>
+    <function>divide(7,0)</function>
+    <result>0</result>
+    <points>2</points>
+  </test>
+  <test>
     <type>script</type>
     <file>haha.jpg</file>
   </test>

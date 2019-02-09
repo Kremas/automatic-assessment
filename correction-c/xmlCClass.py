@@ -101,15 +101,12 @@ class C(object):
             for x in self.func[elem]:
                 for key, value in x.items():
                     if "\"" in value[0]:
-                        self.case_functions += "    CU_ASSERT_STRING_EQUAL("
-                        + key + ", " + value[0] + ");\n"
+                        self.case_functions += "    CU_ASSERT_STRING_EQUAL(" + key + ", " + value[0] + ");\n"
                     else:
                         if(is_int(value[0])):
-                            self.case_functions += "    CU_ASSERT_EQUAL("
-                            + key + ", " + value[0] + ");\n"
+                            self.case_functions += "    CU_ASSERT_EQUAL(" + key + ", " + value[0] + ");\n"
                         elif(is_float(value[0])):
-                            self.case_functions += "    CU_ASSERT_DOUBLE_EQUAL("
-                            + key + ", " + value[0] + ", 0.001);\n"
+                            self.case_functions += "    CU_ASSERT_DOUBLE_EQUAL(" + key + ", " + value[0] + ", 0.001);\n"
                         else:
                             print("Error : result must be one of the following types : string, int, float")
                             exit(-1)
@@ -125,16 +122,13 @@ class C(object):
             else:  # sinon
                 # si on est sur le premier test
                 if(i == 1):
-                    self.add_suite += "    if ((NULL == CU_add_test(pSuite, \""
-                    + elem + "_test\", " + elem + "_test)) ||\n"
+                    self.add_suite += "    if ((NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test)) ||\n"
                 # sinon si c'est ni le premier ni le dernier test
                 elif(i < (len(self.func))):
-                    self.add_suite += "        (NULL == CU_add_test(pSuite, \""
-                    + elem + "_test\", " + elem + "_test)) ||\n"
+                    self.add_suite += "        (NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test)) ||\n"
                 # sinon c'est le dernier test
                 else:
-                    self.add_suite += "        (NULL == CU_add_test(pSuite, \""
-                    + elem + "_test\", " + elem + "_test))\n"
+                    self.add_suite += "        (NULL == CU_add_test(pSuite, \"" + elem + "_test\", " + elem + "_test))\n"
 
         self.add_suite += ("       )\n"
                            "    {\n"
@@ -145,8 +139,7 @@ class C(object):
                            )
 
     def toString(self):
-        return self.header + self.case_functions + self.main + self.add_suite
-        + self.footer
+        return self.header + self.case_functions + self.main + self.add_suite + self.footer
 
     def toFile(self, path='.'):
         with open(path + '/' + self.classname + '_test.c', 'w') as f:
