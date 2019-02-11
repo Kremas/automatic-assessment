@@ -1,16 +1,21 @@
 <tp>
   <test>
-    <type>interface configuration</type>
-    <result>interface FastEthernet0/1</result>
-    <motif>ip address 10.5.22.1 255.255.255.252</motif>
-    <motif>duplex auto</motif>
+    <type>misc</type>
+    <motif>hostname S2</motif>
+    <motif>ip routing</motif>
+    <points>1</points>
+  </test>
+  <test>
+    <type>line configuration</type>
+    <parent>line vty 0 4</parent>
+    <motif>login local</motif>
+    <motif>transport input ssh</motif>
     <points>2</points>
   </test>
   <test>
-    <type>ospf configuration</type>
-    <result>router ospf 1</result>
-    <motif>network 10.5.22.0 0.0.0.3 area 0</motif>
-    <motif>network 10.5.123.0 0.0.0.3 area 0</motif>
-    <points>3</points>
+    <type>line configuration</type>
+    <parent>line con 0</parent>
+    <motif>logging synchronous</motif>
+    <points>1</points>
   </test>
 </tp>
