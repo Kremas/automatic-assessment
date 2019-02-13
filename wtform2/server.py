@@ -30,7 +30,14 @@ class Script(FlaskForm):
 
 
 class TestForm(FlaskForm):
-    test_type = SelectField('Type', [validators.InputRequired()], choices=[('assert', 'Assert'), ('script', 'Script'), ('motif', 'Motif')], default='assert')
+    test_type = SelectField('Type',
+                            [validators.InputRequired()],
+                            choices=[('assert', 'Assert'),
+                                     ('script', 'Script'),
+                                     ('motif', 'Motif')
+                                    ],
+                            default='assert'
+                           )
     points = DecimalField("Points", [validators.InputRequired()])
     a = FormField(Assert)
     m = FormField(Motif)
@@ -63,7 +70,13 @@ class TestForm(FlaskForm):
 
 
 class FullForm(FlaskForm):
-    langage = SelectField('Langage', [validators.InputRequired()], choices=[('java', 'Java'), ('c', 'C'), ('python', 'Python')])
+    langage = SelectField('Langage',
+                          [validators.InputRequired()],
+                          choices=[('java', 'Java'),
+                                   ('c', 'C'),
+                                   ('python', 'Python')
+                                  ]
+                         )
     tests = FieldList(FormField(TestForm), min_entries=1)
     submit = SubmitField()
 
@@ -81,6 +94,24 @@ class FullForm(FlaskForm):
         return root
 
 
+class CiscoForm(FlaskForm):
+    type_test = SelectField('Type',
+                            [validators.InputRequired()],
+                            choices=[('misc', 'Misc'),
+                                     ('int','Interface configuration'),
+                                     ('ospf','OSPF configuration'),
+                                     ('isis','IS-IS configuration'),
+                                     ('eigrp','EIGRP configuration'),
+                                     ('rip','RIP configuration'),
+                                     ('bgp','BGP configuration'),
+                                     ('line','line configuration'),
+                                    ],
+                            default='misc'
+                           )
+    points = DecimalField("Points", [validators.InputRequired()])
+    submit = SubmitField()
+
+
 @server.route('/')
 def home():
     form = FullForm()
@@ -94,7 +125,11 @@ def upload():
     # setattr(form, 'a', FormField(Assert))
     # print(form.errors)
     # return render_template('home.html', form=form)
-    test = etree.tostring(form.toXml(), xml_declaration=True, encoding='utf-8', pretty_print=True).decode('utf-8')
+    test = etree.tostring(form.toXml(),
+                          xml_declaration=True,
+                          encoding='utf-8',
+                          pretty_print=True
+                         ).decode('utf-8')
     return render_template('result.html', result=test)
 
 
@@ -103,6 +138,12 @@ def change():
     form = FullForm()
     setattr(form, 'a', FormField(form.tests[0].test_type))
     return render_template('test.html', test=form.tests[0].form)
+
+
+@server.route('/cisco', methods=['POST'])
+def cisco():
+    form = ciscoForm()
+    return render_template('cisco.html', form=form)
 
 
 if __name__ == '__main__':
