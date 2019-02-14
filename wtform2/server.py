@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms import SelectField, FieldList, FormField, TextField, DecimalField, FileField, SubmitField, validators, ValidationError
+from wtforms import SelectField, FieldList, FormField, TextField, DecimalField, FileField, SubmitField, TextAreaField, validators, ValidationError
 from lxml import etree
 from lxml.builder import E
 
@@ -27,6 +27,20 @@ class Motif(FlaskForm):
 
 class Script(FlaskForm):
     script = FileField('Script', [validators.InputRequired()])
+
+
+class Misc(FlaskForm):
+    textarea = TextAreaField('Motifs', [validators.InputRequired()])
+    def toXml(self):
+        return E.textarea(self.textarea.data)
+
+class Config(FlaskForm):
+    parent = TextField("Parent", [validators.InputRequired()])
+    textarea = TextAreaField('Motifs', [validators.InputRequired()])
+
+    def toXml(self):
+        root = (E.parent(self.parent.data), E.textarea(self.textarea.data))
+        return root
 
 
 class TestForm(FlaskForm):
@@ -95,7 +109,7 @@ class FullForm(FlaskForm):
 
 
 class CiscoForm(FlaskForm):
-    type_test = SelectField('Type',
+    test_type = SelectField('Type',
                             [validators.InputRequired()],
                             choices=[('misc', 'Misc'),
                                      ('int','Interface configuration'),
@@ -108,8 +122,24 @@ class CiscoForm(FlaskForm):
                                     ],
                             default='misc'
                            )
+    mi = FormField(Misc)
+    co = FormField(Config)
     points = DecimalField("Points", [validators.InputRequired()])
     submit = SubmitField()
+
+    def toXml(self):
+        if self.test_type.data == 'misc':
+            t = self.mi.toXml()
+        else:
+            t = self.co.toXml()
+        tmp = E.test(E.type(self.test_type.data))
+        for elem in t:
+            tmp.append(elem)
+        pt = etree.Element("point")
+        pt.text = str(self.points.data)
+
+        tp = E.tp(tmp)
+        return tp
 
 
 @server.route('/')
@@ -140,10 +170,25 @@ def change():
     return render_template('test.html', test=form.tests[0].form)
 
 
-@server.route('/cisco', methods=['POST'])
+@server.route('/cisco')
 def cisco():
-    form = ciscoForm()
+    form = CiscoForm()
     return render_template('cisco.html', form=form)
+
+
+@server.route('/import_cisco', methods=['POST'])
+def upload_cisco():
+    form = CiscoForm()
+    print(form.validate_on_submit())
+    # setattr(form, 'a', FormField(Assert))
+    # print(form.errors)
+    # return render_template('home.html', form=form)
+    test = etree.tostring(form.toXml(),
+                          xml_declaration=True,
+                          encoding='utf-8',
+                          pretty_print=True
+                         ).decode('utf-8')
+    return render_template('result.html', result=test)
 
 
 if __name__ == '__main__':
