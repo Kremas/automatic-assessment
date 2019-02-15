@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms import SelectField, TextField, SubmitField, FieldList, FormField, DecimalField, validators, FileField
+from wtforms import SelectField, TextField, SubmitField, FieldList, FormField, DecimalField, validators, FileField, TextAreaField
 from lxml.builder import E
 from lxml import etree
 from werkzeug import secure_filename
@@ -46,6 +46,42 @@ class TestForm(FlaskForm):
         return root
 
 
+class TestCiscoForm(FlaskForm):
+    test_type = SelectField('Type',
+                            [validators.DataRequired()],
+                            choices=[('misc', 'Misc'),
+                                     ('interface','Interface configuration'),
+                                     ('router ospf','OSPF configuration'),
+                                     ('router isis','IS-IS configuration'),
+                                     ('router eigrp','EIGRP configuration'),
+                                     ('router rip','RIP configuration'),
+                                     ('router bgp','BGP configuration'),
+                                     ('line','Line configuration')
+                                    ],
+                            default='misc'
+                           )
+    test_motif = TextAreaField("Motif")
+    test_parent = TextField("Parent")
+    test_points = DecimalField("Points", [validators.DataRequired()])
+
+    def toXml(self):
+        root = E.test()
+        if self.test_type.data == 'misc':
+            root = E.test(
+                E.type(self.test_type.data),
+                E.textarea(self.test_motif.data),
+                E.points(str(self.test_points.data))
+            )
+        else:
+            root = E.test(
+                E.type(self.test_type.data),
+                E.parent(self.test_parent.data),
+                E.textarea(self.test_motif.data),
+                E.points(str(self.test_points.data))
+            )
+        return root
+
+
 class FullForm(FlaskForm):
     langage = SelectField('Langage', [validators.DataRequired()], choices=[('java', 'Java'), ('c', 'C')])
     commande_compil = TextField('Commande de compilation', [validators.DataRequired()])
@@ -67,11 +103,26 @@ class FullForm(FlaskForm):
         return root
 
 
+class FullCiscoForm(FlaskForm):
+    tests = FieldList(FormField(TestCiscoForm), min_entries=1)
+    submit = SubmitField('Submit')
+
+    def toXml(self):
+        root = E.tp()
+        for elem in self.tests:
+            root.append(elem.toXml())
+        return root
+
+
 @server.route('/')
 def home():
     form = FullForm()
     return render_template('test.html', form=form)
 
+@server.route('/cisco')
+def homeCisco():
+    form = FullCiscoForm()
+    return render_template('cisco.html', form=form)
 
 @server.route('/import', methods=['POST'])
 def upload():
@@ -97,6 +148,23 @@ def upload():
         return render_template('result.html', result=result)
     else:
         return render_template('test.html', form=form, error=form.errors)
+
+
+@server.route('/importCisco', methods=['POST'])
+def uploadCisco():
+    form = FullCiscoForm()
+    print(form.validate_on_submit())
+    print(form.errors)
+    result = ""
+    if form.validate_on_submit():
+        root = form.toXml()
+        result = etree.tostring(root,
+                                xml_declaration=True,
+                                encoding='utf8',
+                                pretty_print=True).decode('utf-8')
+        return render_template('result.html', result=result)
+    else:
+        return render_template('cisco.html', form=form, error=form.errors)
 
 
 if __name__ == '__main__':

@@ -50,6 +50,10 @@ class C(object):
                     if(elem.text == 'misc'):
                         if(self.check_misc(child)):
                             points += int(child.find('points').text)
+                    else:
+                        if(self.check_node(elem.text, child)):
+                            points += int(child.find('points').text)
+                    """
                     if(elem.text == 'interface configuration'):
                         if(self.check_node('interface', child)):
                             points += int(child.find('points').text)
@@ -71,7 +75,7 @@ class C(object):
                     if(elem.text == 'line configuration'):
                         if(self.check_node('line', child)):
                             points += int(child.find('points').text)
-
+                    """
         return points
 
 if __name__ == '__main__':
