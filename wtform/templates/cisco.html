@@ -13,7 +13,7 @@
     <div id="errors" class="container">
       {{ error }}
     </div>
-    <form method="POST" action="/importCisco" class="container" enctype="multipart/form-data" id=form">
+    <form method="POST" action="/importCisco" class="container" enctype="multipart/form-data" id="form">
     <div class="form-group">
       {{ form.csrf_token }}
     </div>
@@ -74,33 +74,32 @@
                             <div class="col-auto"> \
                               <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
                             </div> \
-          /*
-                            <div class="col-auto"> \
-                              <input id="tests-' + x + '-test_motif"
-          class="form-control" name="tests-' + x + '-test_motif" placeholder="Motifs" type="text" value=""> \
-                            </div> \
-          */
                             <div class="col-auto"> \
                               <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                             </div> \
                             <span class="test-delete my-auto fas fa-trash-alt"></span> \
                           </div>');
                         });
-/*
+
     $(document).on("change", "select.test-type", function() {
       var x = $(this).attr("name").replace(/[a-z-_]/g,'')
       var token = $(this).parent().parent().children('input:first-child').val();
-      if($(this).val() == 'motif') {
+      if($(this).val() == 'misc') {
         $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
                                         <div class="col-auto"> \
                                           <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
-                                            <option value="assert">Assert</option> \
-                                            <option value="script">Script</option> \
-                                            <option value="motif" selected>Motif</option> \
+                                            <option value="misc" selected>Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
                                           </select> \
                                         </div> \
                                         <div class="col-auto"> \
-                                          <input id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" placeholder="motif" type="text" value=""> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
                                         </div> \
                                         <div class="col-auto"> \
                                           <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
@@ -109,50 +108,197 @@
                                         );
       }
 
-      if($(this).val() == 'script') {
-        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
-                                         <div class="col-auto"> \
-                                            <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
-                                              <option value="assert">Assert</option> \
-                                              <option value="script" selected>Script</option> \
-                                              <option value="motif">Motif</option> \
-                                            </select> \
-                                          </div> \
-                                          <div class="col-auto"> \
-                                            <input id="tests-' + x + '-script" class="form-control-file" name="tests-' + x + '-test_script" type="file"> \
-                                          </div> \
-                                          <div class="col-auto"> \
-                                            <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
-                                          </div> \
-                                          <span class="test-delete my-auto fas fa-trash-alt"></span>'
-                                       );
-      }
-                
-      if($(this).val() == 'assert') {
+      if($(this).val() == 'interface') {
         $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
                                         <div class="col-auto"> \
                                           <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
-                                            <option value="assert" selected >Assert</option> \
-                                            <option value="script">Script</option> \
-                                            <option value="motif">Motif</option> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface" selected>Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
                                           </select> \
                                         </div> \
                                         <div class="col-auto"> \
-                                          <input id="tests-' + x + '-test_assert_function" class="form-control" name="tests-' + x + '-test_assert_function" placeholder="function(arg, arg, [...])" type="text" value=""> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
                                         </div> \
-                                        <div class="col-auto">= </div> \
                                         <div class="col-auto"> \
-                                          <input id="tests-' + x + '-test_assert_result" name="tests-' + x + '-test_assert_result" class="form-control" placeholder="Résultat" type="text" value=""> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
                                         </div> \
                                         <div class="col-auto"> \
                                           <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                                         </div> \
                                         <span class="test-delete my-auto fas fa-trash-alt"></span>'
-                                       );
+                                        );
+      }
+                
+      if($(this).val() == 'router ospf') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf" selected>OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
+      }
+
+      if($(this).val() == 'router isis') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis" selected>IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
+      }
+
+      if($(this).val() == 'router eigrp') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp" selected>EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
+      }
+
+      if($(this).val() == 'router rip') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip" selected>RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
+      }
+
+      if($(this).val() == 'router bgp') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp" selected>BGP configuration</option> \
+                                            <option value="line">Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
+      }
+            
+      if($(this).val() == 'line') {
+        $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
+                                        <div class="col-auto"> \
+                                          <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
+                                            <option value="misc">Misc</option> \
+                                            <option value="interface">Interface configuration</option> \
+                                            <option value="router ospf">OSPF configuration</option> \
+                                            <option value="router isis">IS-IS configuration</option> \
+                                            <option value="router eigrp">EIGRP configuration</option> \
+                                            <option value="router rip">RIP configuration</option> \
+                                            <option value="router bgp">BGP configuration</option> \
+                                            <option value="line" selected>Line configuration</option> \
+                                          </select> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_parent" name="tests-' + x + '-test_parent" placeholder="Parent" type="text" value=""> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <textarea id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" form="form">Motifs</textarea> \
+                                        </div> \
+                                        <div class="col-auto"> \
+                                          <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
+                                        </div> \
+                                        <span class="test-delete my-auto fas fa-trash-alt"></span>'
+                                        );
       };
        
     });
-*/
+
     $(document).on("click", ".test-delete", function(e) {
       $(this).parent().remove()
     });

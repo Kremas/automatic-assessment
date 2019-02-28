@@ -58,7 +58,7 @@ class TestCiscoForm(FlaskForm):
                                      ('router bgp','BGP configuration'),
                                      ('line','Line configuration')
                                     ],
-                            default='misc'
+                            default='interface'
                            )
     test_motif = TextAreaField("Motif")
     test_parent = TextField("Parent")
