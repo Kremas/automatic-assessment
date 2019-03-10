@@ -101,7 +101,10 @@
       e.preventDefault();
       var name = prompt("Please enter the name of the test");
       if(name != null && name != "") {
-        $.post('/save', { name : name, form : $('#form').serialize()});
+        param = $('#form').serialize() + '&name=' + name
+        $.post('/save', param)
+              
+        // $.post('/save', { name : name, form : $('#form').serialize()});
       }
     });
 

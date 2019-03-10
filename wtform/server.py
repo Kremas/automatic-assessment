@@ -8,6 +8,7 @@ from lxml.builder import E
 from lxml import etree
 from werkzeug import secure_filename
 import json
+from pprint import pprint
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'secretkey'
@@ -179,14 +180,16 @@ def save():
             il faudrait reformater direct le form dans le javascript pour ne
             pas avoir à parser ici
     """
+    
+    pprint(request.form)
     # Affichage de la requete
-    for elem in request.form:
-        print(elem, request.form[elem])
+    # for elem in request.form:
+    #     print(elem, request.form[elem])
 
-    # Affichage lisible du formulaire / parsage
-    tab_form = request.form['form'].split("&")
-    for elem in tab_form:
-        print(elem.split("="))
+    # # Affichage lisible du formulaire / parsage
+    # tab_form = request.form['form'].split("&")
+    # for elem in tab_form:
+    #     print(elem.split("="))
     return "Bien reçu"
 
 
