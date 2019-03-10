@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 # coding: utf8
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import SelectField, TextField, SubmitField, FieldList, FormField, DecimalField, validators, FileField, TextAreaField
 from lxml.builder import E
 from lxml import etree
 from werkzeug import secure_filename
+import json
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'secretkey'
@@ -165,6 +166,28 @@ def uploadCisco():
         return render_template('result.html', result=result)
     else:
         return render_template('cisco.html', form=form, error=form.errors)
+
+
+@server.route('/save', methods=['POST'])
+def save():
+    """ fonction qui récupère le nom du formulaire ainsi que le formulaire.
+        Format en json { name : <nom du formulaire>, form : <formulaire> }.
+        Soucis:
+            Avant que j'ajoute le nom, le form etait deja bien formatté en
+            json via ('#form').stringify() dans le javascript, mais maintenant
+            je recup une string que je dois re parser ici donc c'est chiant,
+            il faudrait reformater direct le form dans le javascript pour ne
+            pas avoir à parser ici
+    """
+    # Affichage de la requete
+    for elem in request.form:
+        print(elem, request.form[elem])
+
+    # Affichage lisible du formulaire / parsage
+    tab_form = request.form['form'].split("&")
+    for elem in tab_form:
+        print(elem.split("="))
+    return "Bien reçu"
 
 
 if __name__ == '__main__':

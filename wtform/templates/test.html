@@ -13,7 +13,7 @@
     <div id="errors" class="container">
       {{ error }}
     </div>
-    <form method="POST" action="/import" class="container" enctype="multipart/form-data">
+    <form method="POST" action="/import" class="container" enctype="multipart/form-data" id="form">
       <div class="form-group">
       {{ form.csrf_token }}
       {{ form.langage.label }}
@@ -62,8 +62,9 @@
         <button type="button" id="more-button" class="btn btn-success">Plus</button>
       </div>
       <div class="form-group">
-      {{ form.submit(class="btn btn-primary") }}
-    </div>
+        <button type="button" id="save-button" class="btn btn-info">Save</button>
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
     </form>
     <a href="http://0.0.0.0:5000/cisco">Correction Cisco</a>
   </body>
@@ -95,6 +96,14 @@
                             <span class="test-delete my-auto fas fa-trash-alt"></span> \
                           </div>');
                         });
+
+    $("#save-button").click(function(e){
+      e.preventDefault();
+      var name = prompt("Please enter the name of the test");
+      if(name != null && name != "") {
+        $.post('/save', { name : name, form : $('#form').serialize()});
+      }
+    });
 
     $(document).on("change", "select.test-type", function() {
       var x = $(this).attr("name").replace(/[a-z-_]/g,'')
