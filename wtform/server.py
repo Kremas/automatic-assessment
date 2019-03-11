@@ -9,6 +9,7 @@ from lxml import etree
 from werkzeug import secure_filename
 from pprint import pprint
 import os
+import re
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'secretkey'
@@ -212,11 +213,16 @@ def save():
                             encoding='utf8',
                             pretty_print=True).decode('utf-8')
     print(result)
-    if not os.path.isdir('saved_test/' + request.form['name']):
-        os.mkdir('saved_test/' + request.form['name'])
+    path = os.path.normpath(request.form['name'])
+    sanitize_path = re.search('([A-Za-z0-9-]+)', path)
 
-    with open('saved_test/' + request.form['name'] + '/' + request.form['name'] + '.xml', 'w+') as f:
-        f.write(result)
+    if sanitize_path:
+        path = sanitize_path.group(1)
+        if not os.path.isdir('saved_test/' + path):
+            os.mkdir('saved_test/' + path)
+
+        with open('saved_test/' + path + '/' + path + '.xml', 'w+') as f:
+            f.write(result)
 
     return "Bien reçu"
 
