@@ -9,23 +9,32 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </header>
   <body>
-    <h1> Auto Assessment </h1>
-    <div id="errors" class="container">
+    <div id="title" style="text-align: center">
+      <h1> Auto Assessment </h1>
+    </div>
+    <div id="errors" class="container p-5" style="text-align: center">
       {{ error }}
     </div>
-    <form method="POST" action="/import" class="container" enctype="multipart/form-data" id="form">
-      <div class="form-group">
+    <form method="POST" action="/import" class="container border p-5" enctype="multipart/form-data" id="form">
+      <div class="form-group row">
       {{ form.csrf_token }}
-      {{ form.langage.label }}
-      {{ form.langage(class="form-control") }}
+      {{ form.subject.label(class="col-sm-3 col-form-label") }}
+      {{ form.subject(class="form-control-file col-sm-9") }}
+
+      {{ form.codes.label(class="col-sm-3 col-form-label") }}
+      {{ form.codes(class="form-control-file col-sm-9") }}
+
+      {{ form.langage.label(class="col-sm-3 col-form-label") }}
+      {{ form.langage(class="form-control col-sm-2") }}
     </div>
-    <div class="form-group">
-      {{ form.commande_compil.label }}
-      {{ form.commande_compil(class="form-control", placeholder="javac Class.java")}}
-      {{ form.points.label }}
-      {{ form.points(class="form-control") }}
+    <div class="form-group row">
+      {{ form.commande_compil.label(class="col-sm-3 col-form-label") }}
+      {{ form.commande_compil(class="form-control col-sm-9", placeholder="javac Class.java")}}
+      {{ form.points.label(class="col-sm-3 col-form-label") }}
+      {{ form.points(class="form-control col-sm-2") }}
       </div>
     <div class="tests form-group">
+      Tests
         {% for t in form.tests %}
           <div class="test form-row form-group">
             {{ t.csrf_token }}
@@ -61,12 +70,14 @@
       <div class="form-group">
         <button type="button" id="more-button" class="btn btn-success">Plus</button>
       </div>
-      <div class="form-group">
+      <div class="form-group" style="text-align: center">
         <button type="button" id="save-button" class="btn btn-info">Save</button>
         {{ form.submit(class="btn btn-primary") }}
       </div>
     </form>
-    <a href="http://0.0.0.0:5000/cisco">Correction Cisco</a>
+    <div class="container mt-5" style="text-align: center">
+      <a href="http://0.0.0.0:5000/cisco" class="btn btn-primary">Correction Cisco</a>
+    </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">

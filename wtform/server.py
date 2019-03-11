@@ -7,8 +7,8 @@ from wtforms import SelectField, TextField, SubmitField, FieldList, FormField, D
 from lxml.builder import E
 from lxml import etree
 from werkzeug import secure_filename
-import json
 from pprint import pprint
+import os
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'secretkey'
@@ -52,13 +52,13 @@ class TestCiscoForm(FlaskForm):
     test_type = SelectField('Type',
                             [validators.DataRequired()],
                             choices=[('misc', 'Misc'),
-                                     ('interface','Interface configuration'),
-                                     ('router ospf','OSPF configuration'),
-                                     ('router isis','IS-IS configuration'),
-                                     ('router eigrp','EIGRP configuration'),
-                                     ('router rip','RIP configuration'),
-                                     ('router bgp','BGP configuration'),
-                                     ('line','Line configuration')
+                                     ('interface', 'Interface configuration'),
+                                     ('router ospf', 'OSPF configuration'),
+                                     ('router isis', 'IS-IS configuration'),
+                                     ('router eigrp', 'EIGRP configuration'),
+                                     ('router rip', 'RIP configuration'),
+                                     ('router bgp', 'BGP configuration'),
+                                     ('line', 'Line configuration')
                                     ],
                             default='interface'
                            )
@@ -85,6 +85,8 @@ class TestCiscoForm(FlaskForm):
 
 
 class FullForm(FlaskForm):
+    subject = FileField('Sujet PDF')
+    codes = FileField('Exercices élèves')
     langage = SelectField('Langage', [validators.DataRequired()], choices=[('java', 'Java'), ('c', 'C')])
     commande_compil = TextField('Commande de compilation', [validators.DataRequired()])
     points = DecimalField('Points', [validators.DataRequired()])
@@ -121,10 +123,12 @@ def home():
     form = FullForm()
     return render_template('test.html', form=form)
 
+
 @server.route('/cisco')
 def homeCisco():
     form = FullCiscoForm()
     return render_template('cisco.html', form=form)
+
 
 @server.route('/import', methods=['POST'])
 def upload():
@@ -187,30 +191,38 @@ def save():
     i = 0
     for elem in request.form:
         if str(i) in elem:
-            if(request.form[("tests-"+str(i)+"-test_type")] == "assert"):
+            if(request.form[("tests-" + str(i) + "-test_type")] == "assert"):
                 test_xml = E.test(
                     E.type('assert'),
-                    E.function(request.form[("tests-"+str(i)+"-test_assert_function")]),
-                    E.result(request.form[("tests-"+str(i)+"-test_assert_result")]),
-                    E.points(request.form[("tests-"+str(i)+"-test_points")]),
+                    E.function(request.form[("tests-" + str(i) + "-test_assert_function")]),
+                    E.result(request.form[("tests-" + str(i) + "-test_assert_result")]),
+                    E.points(request.form[("tests-" + str(i) + "-test_points")]),
                 )
-            if(request.form[("tests-"+str(i)+"-test_type")] == "motif"):
+            if(request.form[("tests-" + str(i) + "-test_type")] == "motif"):
                 test_xml = E.test(
                     E.type('motif'),
-                    E.motif(request.form[("tests-"+str(i)+"-test_motif")]),
-                    E.points(request.form[("tests-"+str(i)+"-test_points")]),
+                    E.motif(request.form[("tests-" + str(i) + "-test_motif")]),
+                    E.points(request.form[("tests-" + str(i) + "-test_points")]),
                 )
             if("test_points" in elem):
-                i+=1
+                i += 1
                 root.append(test_xml)
     result = etree.tostring(root,
                             xml_declaration=True,
                             encoding='utf8',
                             pretty_print=True).decode('utf-8')
     print(result)
+    if not os.path.isdir('saved_test/' + request.form['name']):
+        os.mkdir('saved_test/' + request.form['name'])
+
+    with open('saved_test/' + request.form['name'] + '/' + request.form['name'] + '.xml', 'w+') as f:
+        f.write(result)
 
     return "Bien reçu"
 
 
 if __name__ == '__main__':
+    if not os.path.isdir('saved_test'):
+        os.mkdir('saved_test')
+        print('Folder for the saves is created')
     server.run("0.0.0.0", debug=True)
