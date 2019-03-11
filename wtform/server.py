@@ -171,25 +171,44 @@ def uploadCisco():
 
 @server.route('/save', methods=['POST'])
 def save():
-    """ fonction qui récupère le nom du formulaire ainsi que le formulaire.
-        Format en json { name : <nom du formulaire>, form : <formulaire> }.
-        Soucis:
-            Avant que j'ajoute le nom, le form etait deja bien formatté en
-            json via ('#form').stringify() dans le javascript, mais maintenant
-            je recup une string que je dois re parser ici donc c'est chiant,
-            il faudrait reformater direct le form dans le javascript pour ne
-            pas avoir à parser ici
-    """
-    
     pprint(request.form)
-    # Affichage de la requete
-    # for elem in request.form:
-    #     print(elem, request.form[elem])
 
-    # # Affichage lisible du formulaire / parsage
-    # tab_form = request.form['form'].split("&")
-    # for elem in tab_form:
-    #     print(elem.split("="))
+
+    # to XML
+    i = 0
+    root = E.tp(
+        E.langage(request.form['langage']),
+        E.compilation(
+            E.command(request.form['commande_compil']),
+            E.points(request.form['points'])
+        )
+    )
+    test_xml = E.test()
+    i = 0
+    for elem in request.form:
+        if str(i) in elem:
+            if(request.form[("tests-"+str(i)+"-test_type")] == "assert"):
+                test_xml = E.test(
+                    E.type('assert'),
+                    E.function(request.form[("tests-"+str(i)+"-test_assert_function")]),
+                    E.result(request.form[("tests-"+str(i)+"-test_assert_result")]),
+                    E.points(request.form[("tests-"+str(i)+"-test_points")]),
+                )
+            if(request.form[("tests-"+str(i)+"-test_type")] == "motif"):
+                test_xml = E.test(
+                    E.type('motif'),
+                    E.motif(request.form[("tests-"+str(i)+"-test_motif")]),
+                    E.points(request.form[("tests-"+str(i)+"-test_points")]),
+                )
+            if("test_points" in elem):
+                i+=1
+                root.append(test_xml)
+    result = etree.tostring(root,
+                            xml_declaration=True,
+                            encoding='utf8',
+                            pretty_print=True).decode('utf-8')
+    print(result)
+
     return "Bien reçu"
 
 
