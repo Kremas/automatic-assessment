@@ -112,11 +112,20 @@
       e.preventDefault();
       var name = prompt("Please enter the name of the test");
       if(name != null && name != "") {
-        param = $('#form').serialize() + '&name=' + name
-        $.post('/save', param)
-              
-        // $.post('/save', { name : name, form : $('#form').serialize()});
+        // param = $('#form').serialize() + '&name=' + name
+        param = new FormData($('#form')[0])
+        param.append('name', name);
+        console.log(param);
+        // $.post('/save', param)
+        $.ajax({
+            url: "/save", // the endpoint
+            type: "POST", // http method
+            processData: false,
+            contentType: false,
+            data: param
+          });
       }
+    
     });
 
     $(document).on("change", "select.test-type", function() {

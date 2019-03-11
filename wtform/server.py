@@ -60,9 +60,9 @@ class TestCiscoForm(FlaskForm):
                                      ('router rip', 'RIP configuration'),
                                      ('router bgp', 'BGP configuration'),
                                      ('line', 'Line configuration')
-                                    ],
+                                     ],
                             default='interface'
-                           )
+                            )
     test_motif = TextAreaField("Motif")
     test_parent = TextField("Parent")
     test_points = DecimalField("Points", [validators.DataRequired()])
@@ -178,7 +178,6 @@ def uploadCisco():
 def save():
     pprint(request.form)
 
-
     # to XML
     i = 0
     root = E.tp(
@@ -214,7 +213,7 @@ def save():
                             pretty_print=True).decode('utf-8')
     print(result)
     path = os.path.normpath(request.form['name'])
-    sanitize_path = re.search('([A-Za-z0-9-]+)', path)
+    sanitize_path = re.search('([A-Za-z0-9-_]+)', path)
 
     if sanitize_path:
         path = sanitize_path.group(1)
@@ -223,6 +222,16 @@ def save():
 
         with open('saved_test/' + path + '/' + path + '.xml', 'w+') as f:
             f.write(result)
+
+        if 'subject' in request.files:
+            subject = request.files['subject']
+            filename = secure_filename(subject.filename)
+            subject.save('saved_test/' + path + '/' + filename)
+
+        if 'codes' in request.files:
+            codes = request.files['codes']
+            filename = secure_filename(codes.filename)
+            codes.save('saved_test/' + path + '/' + filename)
 
     return "Bien reçu"
 
