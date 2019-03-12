@@ -18,6 +18,9 @@
     <form method="POST" action="/import" class="container border p-5" enctype="multipart/form-data" id="form">
       <div class="form-group row">
       {{ form.csrf_token }}
+      {{ form.name.label(class="col-sm-3 col-form-label") }}
+      {{ form.name(class="form-control col-sm-8") }}
+
       {{ form.subject.label(class="col-sm-3 col-form-label") }}
       {{ form.subject(class="form-control-file col-sm-9") }}
 
@@ -109,22 +112,18 @@
                         });
 
     $("#save-button").click(function(e){
-      e.preventDefault();
-      var name = prompt("Please enter the name of the test");
-      if(name != null && name != "") {
-        // param = $('#form').serialize() + '&name=' + name
+        e.preventDefault()
         param = new FormData($('#form')[0])
-        param.append('name', name);
-        console.log(param);
-        // $.post('/save', param)
+
         $.ajax({
             url: "/save", // the endpoint
             type: "POST", // http method
             processData: false,
             contentType: false,
-            data: param
+            data: param,
+          }).done(function(ret){
+            $('#errors').html(ret);
           });
-      }
     
     });
 

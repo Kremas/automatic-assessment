@@ -34,9 +34,14 @@ class TestForm(FlaskForm):
             )
 
         if self.test_type.data == 'script':
+            if not self.test_script.data:
+                filename = ""
+            else:
+                filename = self.test_script.data.filename
+
             root = E.test(
                 E.type(self.test_type.data),
-                E.file(self.test_script.data.filename)
+                E.file(filename)
             )
 
         if self.test_type.data == 'motif':
@@ -86,7 +91,8 @@ class TestCiscoForm(FlaskForm):
 
 
 class FullForm(FlaskForm):
-    subject = FileField('Sujet PDF')
+    name = TextField('Nom', [validators.DataRequired()])
+    subject = FileField('Sujet PDF (optionnel)')
     codes = FileField('Exercices élèves')
     langage = SelectField('Langage', [validators.DataRequired()], choices=[('java', 'Java'), ('c', 'C')])
     commande_compil = TextField('Commande de compilation', [validators.DataRequired()])
@@ -176,43 +182,22 @@ def uploadCisco():
 
 @server.route('/save', methods=['POST'])
 def save():
-    pprint(request.form)
+    form = FullForm()
 
-    # to XML
-    i = 0
-    root = E.tp(
-        E.langage(request.form['langage']),
-        E.compilation(
-            E.command(request.form['commande_compil']),
-            E.points(request.form['points'])
-        )
-    )
-    test_xml = E.test()
-    i = 0
-    for elem in request.form:
-        if str(i) in elem:
-            if(request.form[("tests-" + str(i) + "-test_type")] == "assert"):
-                test_xml = E.test(
-                    E.type('assert'),
-                    E.function(request.form[("tests-" + str(i) + "-test_assert_function")]),
-                    E.result(request.form[("tests-" + str(i) + "-test_assert_result")]),
-                    E.points(request.form[("tests-" + str(i) + "-test_points")]),
-                )
-            if(request.form[("tests-" + str(i) + "-test_type")] == "motif"):
-                test_xml = E.test(
-                    E.type('motif'),
-                    E.motif(request.form[("tests-" + str(i) + "-test_motif")]),
-                    E.points(request.form[("tests-" + str(i) + "-test_points")]),
-                )
-            if("test_points" in elem):
-                i += 1
-                root.append(test_xml)
+    if not form.name.data:
+        print('error')
+        return 'Nom requis'
+
+    root = form.toXml()
+
     result = etree.tostring(root,
                             xml_declaration=True,
                             encoding='utf8',
                             pretty_print=True).decode('utf-8')
+
     print(result)
-    path = os.path.normpath(request.form['name'])
+
+    path = os.path.normpath(form.name.data)
     sanitize_path = re.search('([A-Za-z0-9-_]+)', path)
 
     if sanitize_path:
@@ -233,7 +218,13 @@ def save():
             filename = secure_filename(codes.filename)
             codes.save('saved_test/' + path + '/' + filename)
 
-    return "Bien reçu"
+        for elem in form.tests:
+            if elem.test_type.data == 'script':
+                if elem.test_script.data != "":
+                    filename = secure_filename(elem.test_script.data.filename)
+                    elem.test_script.data.save("saved_test/" + path + '/' + filename)
+
+    return "Enregistré"
 
 
 if __name__ == '__main__':
