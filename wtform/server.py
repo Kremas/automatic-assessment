@@ -26,6 +26,7 @@ class TestForm(FlaskForm):
     def toXml(self):
         root = E.test()
         if self.test_type.data == 'assert':
+            print(self.test_assert_function.data)
             root = E.test(
                 E.type(self.test_type.data),
                 E.function(self.test_assert_function.data),
@@ -41,7 +42,8 @@ class TestForm(FlaskForm):
 
             root = E.test(
                 E.type(self.test_type.data),
-                E.file(filename)
+                E.file(filename),
+                E.points(str(self.test_points.data))
             )
 
         if self.test_type.data == 'motif':
@@ -52,6 +54,23 @@ class TestForm(FlaskForm):
             )
 
         return root
+
+    def fromXml(self, element):
+        self.test_type.data = element.find('type').text
+        if element.find('points').text != 'None':
+            self.test_points.data = float(element.find('points').text)
+
+        if self.test_type.data == 'assert':
+            self.test_assert_function.data = element.find('function').text
+            self.test_assert_result.data = element.find('result').text
+
+        if self.test_type.data == 'script':
+            pass
+
+        if self.test_type.data == 'motif':
+            self.test_motif.data = element.find('motif').text
+
+        return self
 
 
 class TestCiscoForm(FlaskForm):
@@ -97,21 +116,53 @@ class FullForm(FlaskForm):
     langage = SelectField('Langage', [validators.DataRequired()], choices=[('java', 'Java'), ('c', 'C')])
     commande_compil = TextField('Commande de compilation', [validators.DataRequired()])
     points = DecimalField('Points', [validators.DataRequired()])
-    tests = FieldList(FormField(TestForm), min_entries=1)
+    tests = FieldList(FormField(TestForm))
     submit = SubmitField('Submit')
 
     def toXml(self):
         root = E.tp(
+            E.name(self.name.data),
+            E.codes(),
+            E.subject(),
             E.langage(self.langage.data),
             E.compilation(
                 E.command(self.commande_compil.data),
                 E.point(str(self.points.data))),
         )
+        if self.subject.data != '':
+            root.find('subject').text = self.subject.data.filename
+
+        if self.codes.data != '':
+            root.find('codes').text = self.codes.data.filename
+
         cpt = 1
         for elem in self.tests:
             root.append(elem.toXml())
             cpt += 1
         return root
+
+    def fromXml(self, path):
+        tree = etree.parse(path)
+        root = tree.getroot()
+
+        self.name.data = root.find('name').text
+        self.langage.data = root.find('langage').text
+        # self.subject.data = root.find('subject').text
+        # self.codes.data.filename = root.find('codes')
+        self.commande_compil.data = root.find('compilation').find('command').text
+
+        if root.find('compilation').find('point').text != 'None':
+            self.points.data = float(root.find('compilation').find('point').text)
+
+        for idx, elem in enumerate(root.findall('test')):
+            print(idx)
+            t = TestForm().fromXml(elem)
+            self.tests.append_entry(FieldList(TestForm()))
+            self.tests[idx].test_type.data = t.test_type.data
+            self.tests[idx].test_assert_function.data = t.test_assert_function.data
+            self.tests[idx].test_assert_result.data = t.test_assert_result.data
+            self.tests[idx].test_motif.data = t.test_motif.data
+            self.tests[idx].test_points.data = t.test_points.data
 
 
 class FullCiscoForm(FlaskForm):
@@ -128,7 +179,13 @@ class FullCiscoForm(FlaskForm):
 @server.route('/')
 def home():
     form = FullForm()
-    return render_template('test.html', form=form)
+    liste = os.listdir('saved_test')
+    if 't' in request.args:
+        full_path = os.path.join('saved_test', request.args.get('t'), request.args.get('t') + '.xml')
+        form.fromXml(full_path)
+    else:
+        form.tests.append_entry()
+    return render_template('test.html', form=form, liste=liste)
 
 
 @server.route('/cisco')
@@ -148,7 +205,7 @@ def upload():
             if elem.test_type.data == 'script':
                 if elem.test_script.data != "":
                     filename = secure_filename(elem.test_script.data.filename)
-                    elem.test_script.data.save("/tmp/" + filename)
+                    elem.test_script.data.save(os.path.join('saved_test', request.form.get('name'), filename))
                 else:
                     return render_template('test.html', form=form, error="file required")
 
@@ -188,13 +245,13 @@ def save():
         print('error')
         return 'Nom requis'
 
+    print(form.tests[0].test_assert_function)
     root = form.toXml()
 
     result = etree.tostring(root,
                             xml_declaration=True,
                             encoding='utf8',
                             pretty_print=True).decode('utf-8')
-
     print(result)
 
     path = os.path.normpath(form.name.data)
@@ -202,29 +259,36 @@ def save():
 
     if sanitize_path:
         path = sanitize_path.group(1)
-        if not os.path.isdir('saved_test/' + path):
-            os.mkdir('saved_test/' + path)
+        if not os.path.isdir(os.path.join('saved_test', path)):
+            os.mkdir(os.path.join('saved_test', path))
 
-        with open('saved_test/' + path + '/' + path + '.xml', 'w+') as f:
+        with open(os.path.join('saved_test', path, path + '.xml'), 'w+') as f:
             f.write(result)
 
         if 'subject' in request.files:
             subject = request.files['subject']
             filename = secure_filename(subject.filename)
-            subject.save('saved_test/' + path + '/' + filename)
+            subject.save(os.path.join('saved_test', path, filename))
 
         if 'codes' in request.files:
             codes = request.files['codes']
             filename = secure_filename(codes.filename)
-            codes.save('saved_test/' + path + '/' + filename)
+            codes.save(os.path.join('saved_test', path, filename))
 
         for elem in form.tests:
             if elem.test_type.data == 'script':
                 if elem.test_script.data != "":
                     filename = secure_filename(elem.test_script.data.filename)
-                    elem.test_script.data.save("saved_test/" + path + '/' + filename)
+                    elem.test_script.data.save(os.path.join('saved_test', path, filename))
 
     return "Enregistré"
+
+
+@server.route('/list', methods=['GET'])
+def liste():
+    tests = os.listdir('saved_test')
+
+    return render_template('liste.html', tests=tests)
 
 
 if __name__ == '__main__':

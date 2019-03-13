@@ -80,10 +80,20 @@
     </form>
     <div class="container mt-5" style="text-align: center">
       <a href="http://0.0.0.0:5000/cisco" class="btn btn-primary">Correction Cisco</a>
+      <button id="liste" class="btn btn-primary">Liste des corrections</button>
+      <div class="container liste" style="display: none;">
+        {% for t in liste %}
+          <a class="test_list" href="/?t={{ t }}">{{ t }}</a><br>
+        {% endfor %}
+      </div>
     </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
+    $('#liste').click(function(e) {
+      $('.liste').toggle();
+    })
+
     var x = 0;
     $("#more-button").click(function(e){
       x++;
@@ -124,6 +134,10 @@
           }).done(function(ret){
             $('#errors').html(ret);
           });
+
+        $.get('/list').done(function(data){
+          $('.liste').html(data);
+        })
     
     });
 
