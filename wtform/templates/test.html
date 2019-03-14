@@ -22,19 +22,24 @@
       {{ form.name(class="form-control col-sm-8") }}
 
       {{ form.subject.label(class="col-sm-3 col-form-label") }}
-      {{ form.subject(class="form-control-file col-sm-9") }}
+      {% if (form.subject_saved.data != None and form.subject_saved.data != '') %}
+        <span class="col-sm-2">{{ form.subject_saved.data }}</span>
+      {% endif %}
+      {{ form.subject(class="form-control-file col-sm-7") }}
 
       {{ form.codes.label(class="col-sm-3 col-form-label") }}
-      {{ form.codes(class="form-control-file col-sm-9") }}
+      {% if form.codes_saved.data != None %}
+        <span class="col-sm-2">{{ form.codes_saved.data }}</span>
+      {% endif %}
+      {{ form.codes(class="form-control-file col-sm-7") }}
 
       {{ form.langage.label(class="col-sm-3 col-form-label") }}
       {{ form.langage(class="form-control col-sm-2") }}
     </div>
     <div class="form-group row">
       {{ form.commande_compil.label(class="col-sm-3 col-form-label") }}
-      {{ form.commande_compil(class="form-control col-sm-9", placeholder="javac Class.java")}}
-      {{ form.points.label(class="col-sm-3 col-form-label") }}
-      {{ form.points(class="form-control col-sm-2") }}
+      {{ form.commande_compil(class="form-control col-sm-6", placeholder="javac Class.java")}}
+      {{ form.points(class="form-control col-sm-2", placeholder="points") }}
       </div>
     <div class="tests form-group">
       Tests
@@ -48,6 +53,9 @@
               {% if t.test_type.data == 'assert' %}
                 {{ t.test_assert_function(class="form-control", placeholder="function(arg, arg, [...])") }}
               {% elif t.test_type.data == 'script' %}
+                {% if (t.test_script_saved.data != None and t.test_script_saved.data != '') %}
+                  <span>{{ t.test_script_saved.data }}</span>
+                {% endif %}
                 {{ t.test_script(class="form-control-file") }}
               {% elif t.test_type.data == 'motif' %}
                 {{ t.test_motif(class="form-control", placeholder="motif") }}

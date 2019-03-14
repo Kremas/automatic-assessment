@@ -22,6 +22,7 @@ class TestForm(FlaskForm):
     test_assert_result = TextField("Résultat")
     test_points = DecimalField("Points", [validators.DataRequired()])
     test_script = FileField("Script")
+    test_script_saved = TextField()
 
     def toXml(self):
         root = E.test()
@@ -37,6 +38,9 @@ class TestForm(FlaskForm):
         if self.test_type.data == 'script':
             if not self.test_script.data:
                 filename = ""
+                if self.test_script_saved != '':
+                    filename = self.test_script_saved.data
+
             else:
                 filename = self.test_script.data.filename
 
@@ -65,7 +69,7 @@ class TestForm(FlaskForm):
             self.test_assert_result.data = element.find('result').text
 
         if self.test_type.data == 'script':
-            pass
+            self.test_script_saved.data = element.find('file').text
 
         if self.test_type.data == 'motif':
             self.test_motif.data = element.find('motif').text
@@ -112,7 +116,9 @@ class TestCiscoForm(FlaskForm):
 class FullForm(FlaskForm):
     name = TextField('Nom', [validators.DataRequired()])
     subject = FileField('Sujet PDF (optionnel)')
+    subject_saved = TextField()
     codes = FileField('Exercices élèves')
+    codes_saved = TextField()
     langage = SelectField('Langage', [validators.DataRequired()], choices=[('java', 'Java'), ('c', 'C')])
     commande_compil = TextField('Commande de compilation', [validators.DataRequired()])
     points = DecimalField('Points', [validators.DataRequired()])
@@ -120,6 +126,7 @@ class FullForm(FlaskForm):
     submit = SubmitField('Submit')
 
     def toXml(self):
+        debug(self)
         root = E.tp(
             E.name(self.name.data),
             E.codes(),
@@ -131,9 +138,13 @@ class FullForm(FlaskForm):
         )
         if self.subject.data != '':
             root.find('subject').text = self.subject.data.filename
+        elif (self.subject_saved.data != ''):
+            root.find('subject').text = self.subject_saved.data
 
         if self.codes.data != '':
             root.find('codes').text = self.codes.data.filename
+        elif (self.codes_saved.data != ''):
+            root.find('subject').text = self.codes_saved.data
 
         cpt = 1
         for elem in self.tests:
@@ -144,18 +155,18 @@ class FullForm(FlaskForm):
     def fromXml(self, path):
         tree = etree.parse(path)
         root = tree.getroot()
-
+        self.codes_saved.data = root.find('codes').text
+        self.subject_saved.data = root.find('subject').text
         self.name.data = root.find('name').text
         self.langage.data = root.find('langage').text
-        # self.subject.data = root.find('subject').text
-        # self.codes.data.filename = root.find('codes')
+        self.subject_saved.data = root.find('subject').text
+        self.codes_saved.data = root.find('codes').text
         self.commande_compil.data = root.find('compilation').find('command').text
 
         if root.find('compilation').find('point').text != 'None':
             self.points.data = float(root.find('compilation').find('point').text)
 
         for idx, elem in enumerate(root.findall('test')):
-            print(idx)
             t = TestForm().fromXml(elem)
             self.tests.append_entry(FieldList(TestForm()))
             self.tests[idx].test_type.data = t.test_type.data
@@ -163,6 +174,7 @@ class FullForm(FlaskForm):
             self.tests[idx].test_assert_result.data = t.test_assert_result.data
             self.tests[idx].test_motif.data = t.test_motif.data
             self.tests[idx].test_points.data = t.test_points.data
+            self.tests[idx].test_script_saved.data = t.test_script_saved.data
 
 
 class FullCiscoForm(FlaskForm):
@@ -185,6 +197,7 @@ def home():
         form.fromXml(full_path)
     else:
         form.tests.append_entry()
+    debug(form)
     return render_template('test.html', form=form, liste=liste)
 
 
@@ -197,6 +210,8 @@ def homeCisco():
 @server.route('/import', methods=['POST'])
 def upload():
     form = FullForm()
+    if form.codes_saved.data != '' and form.codes.data.filename == '':
+        form.codes.data.filename = form.codes_saved.data
     print(form.validate_on_submit())
     print(form.errors)
     result = ""
@@ -240,7 +255,7 @@ def uploadCisco():
 @server.route('/save', methods=['POST'])
 def save():
     form = FullForm()
-
+    debug(form)
     if not form.name.data:
         print('error')
         return 'Nom requis'
@@ -289,6 +304,11 @@ def liste():
     tests = os.listdir('saved_test')
 
     return render_template('liste.html', tests=tests)
+
+
+def debug(form):
+    for field in form:
+        pprint("{%s: %s}" % (field.name, field.data))
 
 
 if __name__ == '__main__':
