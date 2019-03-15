@@ -5,6 +5,30 @@ from lxml import etree
 
 
 class Java(object):
+    '''
+    Classe permettant de convertir le XML generé via l'interface en fichier de test JUNIT
+
+    :param xml_path:
+        Chemin vers le fichier xml à convertir en JUnit tests
+    :type xml_path: str
+    :param classname:
+        Nom de la classe à tester
+    :type classname: str
+    :ivar classname:
+        Nom de la classe à tester.
+        Valeur: classname
+    :ivar header:
+        String comportant le header du fichier java
+    :ivar main:
+        String comportant le main de test
+    :ivar root:
+        Objet etree comportant le XML à parser
+    :ivar compilation:
+
+    :ivar func:
+        Liste comportant les fonctions à tester
+    '''
+
     def __init__(self, xml_path, classname):
         self.classname = classname
         self.header = 'import org.junit.*; \n\
@@ -16,6 +40,9 @@ import static org.junit.Assert.*;\n'
         self.func = {}  # To store the functions to test
 
     def convert(self):
+        '''
+        Conversion du fichier xml en classe Java de test
+        '''
         # Iterate over the list of tests
         tests = self.root.findall('test')
         for test in tests:
@@ -48,9 +75,18 @@ import static org.junit.Assert.*;\n'
         self.main += '}\n'
 
     def toString(self):
+        '''
+        Convertie l'objet en string
+        '''
         return "%s%s" % (self.header, self.main)
 
     def toFile(self, path='.'):
+        '''
+        Écrit l'objet dans un fichier
+
+        :param path:
+            Chemin où écrire l'objet
+        '''
         with open(path + '/' + self.classname + 'Test.java', 'w') as f:
             f.write(self.toString())
 

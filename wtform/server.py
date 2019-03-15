@@ -16,15 +16,50 @@ server.config['SECRET_KEY'] = 'secretkey'
 
 
 class TestForm(FlaskForm):
+    '''
+    Formulaire représentant un test
+
+    :ivar test_points:
+        Points gagnés en réussissant ce test.
+    :type test_points: DecimalField
+
+    :ivar test_type:
+        Type du test: assert(test unitaire), script, motif.
+    :type test_type: SelectField
+
+    :ivar test_assert_function:
+        Fonction à tester en test unitaire. Forme: add(1, 2).
+    :type test_assert_functions: TextField
+
+    :ivar test_assert_result:
+        Résultat attendu de la fonction.
+    :type test_assert_result: TextField
+
+    :ivar test_motif:
+        Regex à chercher dans un code.
+    :type test_motif: TextField
+
+    :ivar test_script:
+        Fichier de script à executer sur le code.
+    :type test_script: TextField
+
+    :ivar test_script_saved:
+        Sauvegarde du nom du fichier de script
+    :type test_script_saved: TextField
+    '''
+    test_points = DecimalField("Points", [validators.DataRequired()])
     test_type = SelectField('Type', [validators.DataRequired()], choices=[('assert', 'Assert'), ('script', 'Script'), ('motif', 'Motif')], default='assert')
     test_assert_function = TextField("Fonction")
-    test_motif = TextField("Motif")
     test_assert_result = TextField("Résultat")
-    test_points = DecimalField("Points", [validators.DataRequired()])
+    test_motif = TextField("Motif")
     test_script = FileField("Script")
+    # stockage du filename du script pour le reload
     test_script_saved = TextField()
 
     def toXml(self):
+        '''
+        Conversion du formulaire de test en fichier XML.
+        '''
         root = E.test()
         if self.test_type.data == 'assert':
             print(self.test_assert_function.data)
@@ -60,6 +95,12 @@ class TestForm(FlaskForm):
         return root
 
     def fromXml(self, element):
+        '''
+        Conversion d'un élément XML en formulaire
+
+        :param element:
+            Element XML à convertir
+        '''
         self.test_type.data = element.find('type').text
         if element.find('points').text != 'None':
             self.test_points.data = float(element.find('points').text)
@@ -114,6 +155,46 @@ class TestCiscoForm(FlaskForm):
 
 
 class FullForm(FlaskForm):
+    '''
+    Formulaire complet incluant les différents tests
+
+    :ivar subject:
+        Sujet PDF de l'examen
+    :type subject: FileField
+
+    :ivar subject_saved:
+        Sauvegarde du nom du sujet
+    :type subject_saved: TextField
+
+    :ivar codes:
+        Archive zip contenant les codes d'élèves à tester
+    :type codes: FileField
+
+    :ivar codes_saved:
+        Sauvegarde du nom de l'archive zip contenant les codes d'élèves à tester
+    :type codes: FileField
+
+    :ivar langage:
+        Choix du langage de programmation utilisé dans les exercices
+    :type langage: SelectField
+
+    :ivar command_compil:
+        Ligne de commande pour compiler les exercices
+    :type command_compil: TextField
+
+    :ivar points:
+        Points attribués à une compilation réussie
+    :type points: DecimalField
+
+    :ivar tests:
+        Liste contenant les différents :class:`TestForm`
+    :type tests: FieldList
+
+    :ivar submit:
+        Soumission du formulaire
+    :type submit: SubmitField
+    '''
+
     name = TextField('Nom', [validators.DataRequired()])
     subject = FileField('Sujet PDF (optionnel)')
     subject_saved = TextField()
@@ -136,6 +217,7 @@ class FullForm(FlaskForm):
                 E.command(self.commande_compil.data),
                 E.point(str(self.points.data))),
         )
+        # Si un nouveau fichier est spécifié, remplacer le sauvegardé
         if self.subject.data != '':
             root.find('subject').text = self.subject.data.filename
         elif (self.subject_saved.data != ''):
@@ -169,6 +251,7 @@ class FullForm(FlaskForm):
         for idx, elem in enumerate(root.findall('test')):
             t = TestForm().fromXml(elem)
             self.tests.append_entry(FieldList(TestForm()))
+            # Dégueulasse, mais necessaire, car append_entry ne passe pas les données et on ne peut pas remplacer l'objet
             self.tests[idx].test_type.data = t.test_type.data
             self.tests[idx].test_assert_function.data = t.test_assert_function.data
             self.tests[idx].test_assert_result.data = t.test_assert_result.data
