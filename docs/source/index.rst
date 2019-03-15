@@ -10,6 +10,7 @@ Welcome to Automatic assessment's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   architecture
    reseau
    java
    python

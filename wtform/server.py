@@ -19,33 +19,33 @@ class TestForm(FlaskForm):
     '''
     Formulaire représentant un test
 
-    :ivar test_points:
+    :ivar TestForm.test_points:
         Points gagnés en réussissant ce test.
-    :type test_points: DecimalField
+    :type TestForm.test_points: DecimalField
 
-    :ivar test_type:
+    :ivar TestForm.test_type:
         Type du test: assert(test unitaire), script, motif.
-    :type test_type: SelectField
+    :type TestForm.test_type: SelectField
 
-    :ivar test_assert_function:
+    :ivar TestForm.test_assert_function:
         Fonction à tester en test unitaire. Forme: add(1, 2).
-    :type test_assert_functions: TextField
+    :type TestForm.test_assert_functions: TextField
 
-    :ivar test_assert_result:
+    :ivar TestForm.test_assert_result:
         Résultat attendu de la fonction.
-    :type test_assert_result: TextField
+    :type TestForm.test_assert_result: TextField
 
-    :ivar test_motif:
+    :ivar TestForm.test_motif:
         Regex à chercher dans un code.
-    :type test_motif: TextField
+    :type TestForm.test_motif: TextField
 
-    :ivar test_script:
+    :ivar TestForm.test_script:
         Fichier de script à executer sur le code.
-    :type test_script: TextField
+    :type TestForm.test_script: TextField
 
-    :ivar test_script_saved:
+    :ivar TestForm.test_script_saved:
         Sauvegarde du nom du fichier de script
-    :type test_script_saved: TextField
+    :type TestForm.test_script_saved: TextField
     '''
     test_points = DecimalField("Points", [validators.DataRequired()])
     test_type = SelectField('Type', [validators.DataRequired()], choices=[('assert', 'Assert'), ('script', 'Script'), ('motif', 'Motif')], default='assert')
@@ -119,6 +119,23 @@ class TestForm(FlaskForm):
 
 
 class TestCiscoForm(FlaskForm):
+    '''
+    :ivar TestCiscoForm.test_type:
+        Type de catégorie à tester
+    :type: TestCiscoForm.test_type: SelectField
+
+    :ivar TestCiscoForm.test_motif:
+        Motif à rechercher dans la configuration
+    :type TestCiscoForm.test_motif: TextAreaField
+
+    :ivar TestCiscoForm.test_parent:
+
+    :type TestCiscoForm.test_parent: TextField
+
+    :ivar TestCiscoForm.test_points:
+        Points à attribuer à ce test
+    :type TestCiscoForm.test_points: DecimalField
+    '''
     test_type = SelectField('Type',
                             [validators.DataRequired()],
                             choices=[('misc', 'Misc'),
@@ -158,41 +175,41 @@ class FullForm(FlaskForm):
     '''
     Formulaire complet incluant les différents tests
 
-    :ivar subject:
+    :ivar FullForm.subject:
         Sujet PDF de l'examen
-    :type subject: FileField
+    :type FullForm.subject: FileField
 
-    :ivar subject_saved:
+    :ivar FullForm.subject_saved:
         Sauvegarde du nom du sujet
-    :type subject_saved: TextField
+    :type FullForm.subject_saved: TextField
 
-    :ivar codes:
+    :ivar FullForm.codes:
         Archive zip contenant les codes d'élèves à tester
-    :type codes: FileField
+    :type FullForm.codes: FileField
 
-    :ivar codes_saved:
+    :ivar FullForm.codes_saved:
         Sauvegarde du nom de l'archive zip contenant les codes d'élèves à tester
-    :type codes: FileField
+    :type FullForm.codes_saved: FileField
 
-    :ivar langage:
+    :ivar FullForm.langage:
         Choix du langage de programmation utilisé dans les exercices
-    :type langage: SelectField
+    :type FullForm.langage: SelectField
 
-    :ivar command_compil:
+    :ivar FullForm.commande_compil:
         Ligne de commande pour compiler les exercices
-    :type command_compil: TextField
+    :type FullForm.commande_compil: TextField
 
-    :ivar points:
+    :ivar FullForm.points:
         Points attribués à une compilation réussie
-    :type points: DecimalField
+    :type FullForm.points: DecimalField
 
-    :ivar tests:
+    :ivar FullForm.tests:
         Liste contenant les différents :class:`TestForm`
-    :type tests: FieldList
+    :type FullForm.tests: FieldList
 
-    :ivar submit:
+    :ivar FullForm.submit:
         Soumission du formulaire
-    :type submit: SubmitField
+    :type FullForm.submit: SubmitField
     '''
 
     name = TextField('Nom', [validators.DataRequired()])
@@ -207,6 +224,9 @@ class FullForm(FlaskForm):
     submit = SubmitField('Submit')
 
     def toXml(self):
+        '''
+        Convertion du test global en fichier XML
+        '''
         debug(self)
         root = E.tp(
             E.name(self.name.data),
@@ -235,6 +255,9 @@ class FullForm(FlaskForm):
         return root
 
     def fromXml(self, path):
+        '''
+        Convertion d'un fichier XML en formulaire global
+        '''
         tree = etree.parse(path)
         root = tree.getroot()
         self.codes_saved.data = root.find('codes').text
@@ -261,10 +284,24 @@ class FullForm(FlaskForm):
 
 
 class FullCiscoForm(FlaskForm):
+    '''
+    Formulaire de test pour config cisco
+
+    :ivar FullCiscoForm.tests:
+        Liste de tests
+    :type FullCiscoForm.tests: FieldList
+
+    :ivar FullCiscoForm.submit:
+        Soumission du formulaire
+    :type FullCiscoForm.submit: SubmitField
+    '''
     tests = FieldList(FormField(TestCiscoForm), min_entries=1)
     submit = SubmitField('Submit')
 
     def toXml(self):
+        '''
+        Convertion du formulaire global en objet xml
+        '''
         root = E.tp()
         for elem in self.tests:
             root.append(elem.toXml())
@@ -273,6 +310,9 @@ class FullCiscoForm(FlaskForm):
 
 @server.route('/')
 def home():
+    '''
+    Sert la page principal du formulaire de test: GET /
+    '''
     form = FullForm()
     liste = os.listdir('saved_test')
     if 't' in request.args:
@@ -286,12 +326,18 @@ def home():
 
 @server.route('/cisco')
 def homeCisco():
+    '''
+    Sert la page de formulaire cisco
+    '''
     form = FullCiscoForm()
     return render_template('cisco.html', form=form)
 
 
 @server.route('/import', methods=['POST'])
 def upload():
+    '''
+    Endpoint permettant le lancement des tests de code: POST /import
+    '''
     form = FullForm()
     if form.codes_saved.data != '' and form.codes.data.filename == '':
         form.codes.data.filename = form.codes_saved.data
@@ -320,6 +366,9 @@ def upload():
 
 @server.route('/importCisco', methods=['POST'])
 def uploadCisco():
+    '''
+    Endpoint permettant le lancement des tests de configuration cisco: POST /importcisco
+    '''
     form = FullCiscoForm()
     print(form.validate_on_submit())
     print(form.errors)
@@ -337,6 +386,9 @@ def uploadCisco():
 
 @server.route('/save', methods=['POST'])
 def save():
+    '''
+    Endpoint permettant l'enregistrement du formulaire et des fichiers uploadés: POST /save
+    '''
     form = FullForm()
     debug(form)
     if not form.name.data:
@@ -384,6 +436,9 @@ def save():
 
 @server.route('/list', methods=['GET'])
 def liste():
+    '''
+    Endpoint permettant de lister tous les formulaires enregistrés: GET /list
+    '''
     tests = os.listdir('saved_test')
 
     return render_template('liste.html', tests=tests)
