@@ -7,13 +7,19 @@ import re
 
 
 class C(object):
+    """ Classe permettant la correction / notation d'une configuration cisco
+    """
     def __init__(self, xml_path, conf_path):
+        """ Initialisation des attributs de la classe.
+        Attributs :
+            root   Fichier XML parsé
+            conf   Configuration cisco parsée
+        """
         self.root = etree.parse(xml_path).getroot()
         self.conf = CiscoConfParse(conf_path, syntax='ios')
 
     def print_xml(self):
-        """prints content of all 'test' nodes in the XML file parsed in
-        self.root
+        """ Affiche le contenu de tous les noeuds "tests" du fichier XML
         """
         for child in self.root:
             for elem in child:
@@ -21,6 +27,9 @@ class C(object):
             print("")
 
     def check_misc(self, node):
+        """ Vérifie si un motif est présent dans la configuration réseau
+        Exemple : 'service password-encryption'
+        """
         res = True
         for elem in node:
             if(elem.tag == 'motif'):
@@ -29,6 +38,16 @@ class C(object):
         return res
 
     def check_node(self, parent, node):
+        """ Vérifie si un/des motif(s) est/sont présent(s) sous un node
+        parent
+        Exemple :
+            parent : 'Interface FastEthernet 0/0'
+            motif : 'ip address 172.16.17.1 255.255.255.0'
+            Vérifie que l'adresse IP ci-dessus il bien configurée dans
+            l'interface fa0/0
+        Il est possible de vérifier des configurations d'interface, OSPF,
+        IS-IS, EIGRP, RIP, BGP, line
+        """
         result = node.find('parent').text
         l_result = []
         for elem in node:
@@ -43,6 +62,10 @@ class C(object):
         return res
 
     def assess(self):
+        """ Fait appel aux fonctions de recherches de motifs et note
+        l'étudiant en fonctions des points définis dans le formulaire selon la
+        présence ou non du motif donné
+        """
         points = 0
         for child in self.root:
             for elem in child:
