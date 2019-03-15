@@ -41,16 +41,20 @@
   </test>
 
   <test>
-    <type>assert</type>
-    <function>divide(0,0)</function>
-    <result>0</result>
+    <type>motif</type>
+    <motif>divide</motif>
     <points>2</points>
   </test>
 
   <test>
-    <type>assert</type>
-    <function>concatenate("aaa","bbb")</function>
-    <result>"aaabbb"</result>
+    <type>motif</type>
+    <motif>concatenate</motif>
+    <points>2</points>
+  </test>
+
+  <test>
+    <type>motif</type>
+    <motif>pasla</motif>
     <points>2</points>
   </test>
 </tp>
