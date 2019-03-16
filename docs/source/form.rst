@@ -6,4 +6,3 @@ Ce module est basé sur
 
 .. automodule:: server
    :members:
-   :undoc-members:

@@ -24,7 +24,7 @@ class Java(object):
     :ivar root:
         Objet etree comportant le XML à parser
     :ivar compilation:
-
+        Objet etree comportant le noeud de la ligne de compilation
     :ivar func:
         Liste comportant les fonctions à tester
     '''
