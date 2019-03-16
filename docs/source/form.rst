@@ -6,4 +6,7 @@ Ce module est basé sur
 
 .. automodule:: server
    :members:
+<<<<<<< HEAD
 
+=======
+>>>>>>> 70086976f98f14e84ae3f387012ee57612b7acfe

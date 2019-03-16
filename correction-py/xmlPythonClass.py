@@ -2,6 +2,32 @@ from lxml import etree
 
 
 class Python(object):
+    '''
+    Classe permettant de convertir le XML généré via l'interface en fichier de
+    test Python unittest
+
+    :param xml_path:
+        Chemin vers le fichier XML à convertir en test CUnit
+    :type xml_path: str
+    :param classname:
+        Nom de la classe à tester
+    :type classname: str
+    :ivar classname:
+        Nom de la classe à tester
+        Valeur: classname
+    :ivar header:
+        String comportant le header (début) du fichier C
+    :ivar main:
+        String comportant le main du fichier C
+    :ivar footer:
+        String comportant le footer (fin) du fichier C
+    :ivar root:
+        Objet etree comportant le XML à parser
+    :ivar func:
+        Dictionnaire comportant une liste de listes.
+
+    '''
+
     def __init__(self, xml_path, classname):
         self.classname = classname
         self.header = ('import unittest\n'
@@ -17,6 +43,9 @@ class Python(object):
         self.func = {}
 
     def convert(self):
+        '''
+        Conversion du fichier xml en classe Java de test
+        '''
         tests = self.root.findall('test')
         for test in tests:
             if test.find('type').text == 'assert':
@@ -37,9 +66,18 @@ class Python(object):
                 self.main += '        self.assertEqual(%s, self.%s.%s(%s));\n\n' % (val[1], self.classname.lower(), key, val[0])
 
     def toString(self):
+        '''
+        Convertie l'objet en string
+        '''
         return (self.header + self.main + self.footer)
 
     def toFile(self, path='.'):
+        '''
+        Écrit l'objet dans un fichier
+
+        :param path:
+            Chemin où écrire l'objet
+        '''
         with open(path + '/' + self.classname.lower() + '_test.py', 'w') as f:
             f.write(self.toString())
 
@@ -47,5 +85,5 @@ class Python(object):
 if __name__ == '__main__':
     obj = Python('../xml/test.xml', 'Calc')
     obj.convert()
-    print(obj.toString())
+    #print(obj.toString())
     obj.toFile()
