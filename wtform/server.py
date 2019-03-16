@@ -122,7 +122,7 @@ class TestCiscoForm(FlaskForm):
     '''
     :ivar TestCiscoForm.test_type:
         Type de catégorie à tester
-    :type: TestCiscoForm.test_type: SelectField
+    :type TestCiscoForm.test_type: SelectField
 
     :ivar TestCiscoForm.test_motif:
         Motif à rechercher dans la configuration
@@ -311,7 +311,9 @@ class FullCiscoForm(FlaskForm):
 @server.route('/')
 def home():
     '''
-    Sert la page principal du formulaire de test: GET /
+    Sert la page principal du formulaire de test
+        - methode: GET
+        - chemin: /
     '''
     form = FullForm()
     liste = os.listdir('saved_test')
@@ -328,6 +330,8 @@ def home():
 def homeCisco():
     '''
     Sert la page de formulaire cisco
+        - methode: GET
+        - chemin: /cisco
     '''
     form = FullCiscoForm()
     return render_template('cisco.html', form=form)
@@ -336,7 +340,9 @@ def homeCisco():
 @server.route('/import', methods=['POST'])
 def upload():
     '''
-    Endpoint permettant le lancement des tests de code: POST /import
+    Endpoint permettant le lancement des tests de code
+        - methode: POST
+        - chemin: /import
     '''
     form = FullForm()
     if form.codes_saved.data != '' and form.codes.data.filename == '':
@@ -367,7 +373,9 @@ def upload():
 @server.route('/importCisco', methods=['POST'])
 def uploadCisco():
     '''
-    Endpoint permettant le lancement des tests de configuration cisco: POST /importcisco
+    Endpoint permettant le lancement des tests de configuration cisco:
+        - methode: POST
+        - chemin: /importcisco
     '''
     form = FullCiscoForm()
     print(form.validate_on_submit())
@@ -387,7 +395,9 @@ def uploadCisco():
 @server.route('/save', methods=['POST'])
 def save():
     '''
-    Endpoint permettant l'enregistrement du formulaire et des fichiers uploadés: POST /save
+    Endpoint permettant l'enregistrement du formulaire et des fichiers uploadés
+        - methode: POST
+        - chemin: /save
     '''
     form = FullForm()
     debug(form)
@@ -437,7 +447,9 @@ def save():
 @server.route('/list', methods=['GET'])
 def liste():
     '''
-    Endpoint permettant de lister tous les formulaires enregistrés: GET /list
+    Endpoint permettant de lister tous les formulaires enregistrés
+        - methode: GET
+        - chemin: /list
     '''
     tests = os.listdir('saved_test')
 
