@@ -98,8 +98,8 @@ class TestForm(FlaskForm):
         '''
         Conversion d'un élément XML en formulaire
 
-        :param element:
-            Element XML à convertir
+        :param element: Element XML à convertir
+        :type element: etree.element
         '''
         self.test_type.data = element.find('type').text
         if element.find('points').text != 'None':

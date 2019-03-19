@@ -7,8 +7,10 @@ import re
 
 
 class C(object):
-    """ Classe permettant la correction / notation d'une configuration cisco
     """
+    Classe permettant la correction / notation d'une configuration cisco
+    """
+
     def __init__(self, xml_path, conf_path):
         """ Initialisation des attributs de la classe.
         Attributs :
@@ -34,17 +36,20 @@ class C(object):
         for elem in node:
             if(elem.tag == 'motif'):
                 if(len(self.conf.find_objects(elem.text)) == 0):
-                   res = False
+                    res = False
         return res
 
     def check_node(self, parent, node):
-        """ Vérifie si un/des motif(s) est/sont présent(s) sous un node
+        """
+        Vérifie si un/des motif(s) est/sont présent(s) sous un node
         parent
+
         Exemple :
             parent : 'Interface FastEthernet 0/0'
             motif : 'ip address 172.16.17.1 255.255.255.0'
             Vérifie que l'adresse IP ci-dessus il bien configurée dans
             l'interface fa0/0
+
         Il est possible de vérifier des configurations d'interface, OSPF,
         IS-IS, EIGRP, RIP, BGP, line
         """
@@ -54,7 +59,7 @@ class C(object):
             if(elem.tag == 'motif'):
                 l_result.append(self.conf.find_parents_w_child(parent,
                                                                elem.text))
-        #print(l_result)
+        # print(l_result)
         res = True
         for l in l_result:
             if result not in l:
@@ -100,6 +105,7 @@ class C(object):
                             points += int(child.find('points').text)
                     """
         return points
+
 
 if __name__ == '__main__':
     obj = C('check_run_conf.xml', 'S2.txt')

@@ -84,8 +84,8 @@ import static org.junit.Assert.*;\n'
         '''
         Écrit l'objet dans un fichier
 
-        :param path:
-            Chemin où écrire l'objet
+        :param path: Chemin où écrire l'objet
+        :type path: str
         '''
         with open(path + '/' + self.classname + 'Test.java', 'w') as f:
             f.write(self.toString())
