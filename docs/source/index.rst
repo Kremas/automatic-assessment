@@ -3,19 +3,41 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Automatic assessment's documentation!
-================================================
+Bienvenue dans notre documentation!
+***********************************
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    architecture
+   form
    reseau
    java
    python
    c
-   form
+   docker
+
+
+Le projet
+=========
+
+Contexte
+--------
+
+De nombreux projets et travaux pratiques sont réalisés dans le cadre de la formation des étudiants.
+Aujourd’hui, ces travaux pratiques sont corrigés à la main par les enseignants, c’est une tâche très longue et complexe.
+Le but du projet de correction automatisée de codes et de configuations est d’automatiser cette phase de correction, via un outil informatique. Le processus de correction de codes et configurations devrait se rapprocher du schéma suivant :
+
+* `Architecture <./architecture.html>`_
+
+Enjeux et objectifs
+-------------------
+
+L’enjeu est de disposer d’un outil commun et centralisé, utilisé par différentes populations d’enseignants, et suffisamment ergonomique pour que les enseignants scientifiques puissent exiger une correction automatisée des travaux pratiques de leurs étudiants, tout en délimitant la correction par des critères précis.
+Dans ce contexte et avec ces enjeux, l’objectif est de lancer un projet de mise en œuvre d’un outil novateur de correction automatisée de codes et de configurations systèmes et réseaux
+Ce projet s’insère dans une trajectoire de modernisation et de simplification des corrections de TP, pour que les enseignants passent moins de temps sur ces tâches redondantes.
+
 
 Indices and tables
 ==================

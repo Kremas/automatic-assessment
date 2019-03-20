@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.abspath('../../correction-java'))
 sys.path.insert(0, os.path.abspath('../../correction-c'))
 sys.path.insert(0, os.path.abspath('../../correction-py'))
 sys.path.insert(0, os.path.abspath('../../wtform'))
+sys.path.insert(0, os.path.abspath('../../docker'))
 
 
 # -- Project information -----------------------------------------------------
