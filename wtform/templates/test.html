@@ -12,6 +12,7 @@
     <div id="title" style="text-align: center">
       <h1> Auto Assessment </h1>
     </div>
+    {% include 'nav.html' %}
     <div id="errors" class="container p-5" style="text-align: center">
       {{ error }}
     </div>
@@ -87,7 +88,6 @@
       </div>
     </form>
     <div class="container mt-5" style="text-align: center">
-      <a href="http://0.0.0.0:5000/cisco" class="btn btn-primary">Correction Cisco</a>
       <button id="liste" class="btn btn-primary">Liste des corrections</button>
       <div class="container liste" style="display: none;">
         {% for t in liste %}

@@ -9,8 +9,11 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </header>
   <body>
-    <h1> Auto Assessment </h1>
-    <div id="errors" class="container">
+    <div id="title" style="text-align: center">
+      <h1> Auto Assessment </h1>
+    </div>
+    {% include 'nav.html' %}
+    <div id="errors" class="container p-5" style="text-align: center">
       {{ error }}
     </div>
     <form method="POST" action="/importCisco" class="container" enctype="multipart/form-data" id="form">
