@@ -38,10 +38,3 @@ L’enjeu est de disposer d’un outil commun et centralisé, utilisé par diff�
 Dans ce contexte et avec ces enjeux, l’objectif est de lancer un projet de mise en œuvre d’un outil novateur de correction automatisée de codes et de configurations systèmes et réseaux
 Ce projet s’insère dans une trajectoire de modernisation et de simplification des corrections de TP, pour que les enseignants passent moins de temps sur ces tâches redondantes.
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

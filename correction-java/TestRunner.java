@@ -19,6 +19,6 @@ public class TestRunner {
 		}
 		System.out.println("  </failure>");
 		System.out.println("<success>" + result.wasSuccessful() + "</success>");
-		System.out.println("</resultat");
+		System.out.println("</result>");
 	}
 }
