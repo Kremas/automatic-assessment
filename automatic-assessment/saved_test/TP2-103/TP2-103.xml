@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf8'?>
+<tp>
+  <name>TP2-103</name>
+  <classname>MaClasse</classname>
+  <codes>test.zip</codes>
+  <subject/>
+  <langage>java</langage>
+  <compilation>
+    <command>javac MaClasse.java</command>
+    <point>2.00</point>
+  </compilation>
+  <test>
+    <type>assert</type>
+    <function>add(1, 2)</function>
+    <result>3</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>add(0, 2)</function>
+    <result>2</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>sub(5, 2)</function>
+    <result>3</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>divide(6, 2)</function>
+    <result>3</result>
+    <points>2.00</points>
+  </test>
+</tp>
