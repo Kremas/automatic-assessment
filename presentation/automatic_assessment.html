@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+	<title>reveal.js</title>
+    
+	<link rel="stylesheet" href="revealjs/css/reveal.css">
+	<link rel="stylesheet" href="revealjs/css/theme/black.css">
+    
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="revealjs/lib/css/zenburn.css">
+    
+	<!-- Printing and PDF exports -->
+	<script>
+	  var link = document.createElement( 'link' );
+	  link.rel = 'stylesheet';
+	  link.type = 'text/css';
+	  link.href = window.location.search.match( /print-pdf/gi ) ? 'revealjs/css/print/pdf.css' : 'revealjs/css/print/paper.css';
+	  document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+  </head>
+  <body>
+	<div class="reveal">
+	  <div class="slides">
+        <section>
+		  <h3 style="float: left; margin-top: 20px; width: 500px">Automatisation de correction de codes et configurations réseau</h3>
+		  <img class="plain" style="float:right;background: none; height: 40%; width: 40%" data-src="img/rouages.png">
+		  <aside class="notes">
+			<ul>
+			  <li>Comment corriger du code</li>
+			  <li>Difficultés rencontrées</li>
+			  <li>Correction de configs réseau</li>
+			</ul>
+		  </aside>
+		</section>
+		<section>
+		  <h3>Correction ?</h3>
+		  <ul>
+			<li class="fragment">Notation</li>
+			<li class="fragment">Tests unitaires</li>
+			<li class="fragment">Recherche de motifs</li>
+		  </ul>
+					
+		  <aside class="notes">
+			<ul>
+			  <li>Par correction, on entend notation / appréciation</li>
+			  <li>Procédure permettant de vérifier le bon fonctionnement d'une portion de programme</li>
+			  <li>Expression régulières / regex</li>
+			</ul>
+		  </aside>
+		</section>
+		
+		<section>
+		  <h3>Architecture</h3>
+		</section>
+
+        <section>
+		  <img class="plain" style="background: none; height: 60%; width: 60%" data-src="img/diag2.png">
+		</section>
+
+        <section>
+		  <h3>Exemple de code simple</h3>
+          <q class="fragment" style="float: left; width: 450px">initialiser: elle permet d'initialiser un tableau, alloué et passé en paramètre</q>
+		  <img class="fragment" style="float : right;" data-src="img/signatures.png">
+		  <aside class="notes">
+			<ul>
+			  <li>13 signatures -> 11 différentes</li>
+			  <li>Si les signatures sont si différentes, imaginer le corp des fonctions</li>
+			</ul>
+		  </aside>
+		</section>
+
+        <section>
+		  <h3>Et si ça compile pas ?</h3>
+			<ul>
+			  <li class="fragment">Impossible de lancer des tests unitaires</li>
+			  <li class="fragment">Facile ! On a qu'à chercher des motifs</li>
+			</ul>
+		</section>
+
+        <section>
+		  <h3>Pas si facile que ça...</h3>
+          <table>
+            <tr>
+              <td>
+		        <img class="fragment" style="float: left;" data-src="img/indice_for.png">
+              </td>
+              <td>
+                <img class="fragment" style="float: right;" data-src="img/indice_while.png">
+              </td>
+            </tr>
+          </table>
+          
+		  <aside class="notes">
+			<ul>
+			  <li>Fonction que retourne l'indice de la première case dont la valeur est inférieure à 10</li>
+			  <li>Possible avec regex, mais x50 codes trop de possibilités</li>
+			</ul>
+		  </aside>
+		</section>
+		
+		<section>
+		  <h3>Fin</h3>
+		  <img class="plain" style="background:none; float:left; vertical-align: middle;" data-src="img/question2.png">
+		  <h4 style="float: right; margin-top: 25%; margin-right:15%">Questions ?</h4>
+		</section>
+	  </div>
+	</div>
+    
+	<script src="revealjs/lib/js/head.min.js"></script>
+	<script src="revealjs/js/reveal.js"></script>
+    
+	<script>
+	  // More info about config & dependencies:
+	  // - https://github.com/hakimel/reveal.js#configuration
+	  // - https://github.com/hakimel/reveal.js#dependencies
+	  Reveal.initialize({
+		  dependencies: [
+			  { src: 'revealjs/plugin/markdown/marked.js' },
+			  { src: 'revealjs/plugin/markdown/markdown.js' },
+			  { src: 'revealjs/plugin/notes/notes.js', async: true },
+			  { src: 'revealjs/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+		  ]
+	  });
+	</script>
+  </body>
+</html>
+
+
