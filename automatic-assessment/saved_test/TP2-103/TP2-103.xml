@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf8'?>
 <tp>
   <name>TP2-103</name>
-  <classname>MaClasse</classname>
-  <codes>test.zip</codes>
+  <classname>test</classname>
+  <codes>test2.zip</codes>
   <subject/>
   <langage>java</langage>
   <compilation>
-    <command>javac MaClasse.java</command>
+    <command>javac test.java</command>
     <point>2.00</point>
   </compilation>
   <test>
