@@ -15,7 +15,9 @@
     {% include 'nav.html' %}
 		<div class="container">
 			{% for t in tests %}
-				<a class="test_list" href="/?t={{ t }}">{{ t }}</a><br>
+        <div>
+				  <a class="test_list" href="/?t={{ t }}">{{ t }}</a><a href="/delete?t={{ t }}" class="test-delete my-auto fas fa-trash-alt"></a>
+        </div>
 			{% endfor %}
 		</div>
 	</body>

@@ -13,6 +13,7 @@ import zipfile
 import docker
 from pprint import pprint
 import json
+from shutil import rmtree
 
 from helper.c import xmlCClass
 from helper.cisco import *
@@ -511,6 +512,17 @@ def liste():
     '''
     tests = os.listdir('saved_test')
 
+    return render_template('liste.html', tests=tests)
+
+
+@server.route('/delete', methods=['GET'])
+def deleteTest():
+    tests = os.listdir('saved_test')
+    print(tests)
+    if 't' in request.args:
+        if request.args['t'] in tests:
+            rmtree(os.path.join('saved_test', request.args['t']))
+            tests = os.listdir('saved_test')
     return render_template('liste.html', tests=tests)
 
 
