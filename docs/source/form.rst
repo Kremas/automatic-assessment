@@ -1,6 +1,12 @@
 Formulaire
 **********
 
+helper/
+=======
+
+Ce dossier contient les sripts Python utilisés pour lancer les tests
+unitaires, les recherches de motif, et les conteneurs Docker
+
 templates/
 ==========
 

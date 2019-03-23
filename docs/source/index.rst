@@ -6,18 +6,6 @@
 Bienvenue dans notre documentation!
 ***********************************
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   architecture
-   form
-   reseau
-   java
-   python
-   c
-   docker
-
 
 Le projet
 =========
@@ -37,4 +25,19 @@ Enjeux et objectifs
 L’enjeu est de disposer d’un outil commun et centralisé, utilisé par différentes populations d’enseignants, et suffisamment ergonomique pour que les enseignants scientifiques puissent exiger une correction automatisée des travaux pratiques de leurs étudiants, tout en délimitant la correction par des critères précis.
 Dans ce contexte et avec ces enjeux, l’objectif est de lancer un projet de mise en œuvre d’un outil novateur de correction automatisée de codes et de configurations systèmes et réseaux
 Ce projet s’insère dans une trajectoire de modernisation et de simplification des corrections de TP, pour que les enseignants passent moins de temps sur ces tâches redondantes.
+
+Documentation
+=============
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   architecture
+   form
+   reseau
+   java
+   python
+   c
+   docker
 
