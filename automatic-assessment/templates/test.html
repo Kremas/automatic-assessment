@@ -49,32 +49,38 @@
         {% for t in form.tests %}
           <div class="test form-row form-group">
             {{ t.csrf_token }}
-            <div class="col-auto">
+            <div class="col-sm-2">
               {{ t.test_type(class="form-control test-type") }}
             </div>
-            <div class="col-auto">
               {% if t.test_type.data == 'assert' %}
+              <div class="col-sm-4">
                 {{ t.test_assert_function(class="form-control", placeholder="function(arg, arg, [...])") }}
+              </div>
               {% elif t.test_type.data == 'script' %}
+              <div class="col-sm-2">
                 {% if (t.test_script_saved.data != None and t.test_script_saved.data != '') %}
-                  <span>{{ t.test_script_saved.data }}</span>
+                  <span>{{ t.test_script_saved(class="form-control") }}</span>
                 {% endif %}
+              </div>
+              <div class="col-sm-6">
                 {{ t.test_script(class="form-control-file") }}
+              </div>
               {% elif t.test_type.data == 'motif' %}
-                {{ t.test_motif(class="form-control", placeholder="motif") }}
+              <div class="col-sm-8">
+                {{ t.test_motif(class="form-control col-18", placeholder="motif") }}
+              </div>
               {% endif %}
-            </div>
-            <div class="col-auto">
               {% if t.test_type.data == 'assert' %}
+              <div class="col-sm-1 text-center">
                 <span>=</span>
+              </div>
               {% endif %}
-            </div>
-            <div class="col-auto">
               {% if t.test_type.data == 'assert' %}
+              <div class="col-3">
                 {{ t.test_assert_result(class="form-control", placeholder=t.test_assert_result.label.text) }}
+              </div>
               {% endif %}
-            </div>
-            <div class="col-auto">
+            <div class="col-1">
               {{ t.test_points(class="form-control", placeholder=t.test_points.label.text) }}
             </div>
             <span class="test-delete my-auto fas fa-trash-alt"></span>
@@ -89,14 +95,6 @@
         {{ form.submit(class="btn btn-primary") }}
       </div>
     </form>
-    <div class="container mt-5" style="text-align: center">
-      <button id="liste" class="btn btn-primary">Liste des corrections</button>
-      <div class="container liste" style="display: none;">
-        {% for t in liste %}
-          <a class="test_list" href="/?t={{ t }}">{{ t }}</a><br>
-        {% endfor %}
-      </div>
-    </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
@@ -110,21 +108,21 @@
       x++;
       $(".tests").append('<div class="test form-row form-group"> \
                             <input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + $(".tests div:first-child input").val() + '">\
-                            <div class="col-auto"> \
+                            <div class="col-2"> \
                               <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
                                 <option value="assert">Assert</option> \
                                 <option value="script">Script</option> \
                                 <option value="motif">Motif</option> \
                               </select> \
                             </div> \
-                            <div class="col-auto"> \
+                            <div class="col-4"> \
                               <input id="tests-' + x + '-test_assert_function" class="form-control" name="tests-' + x + '-test_assert_function" placeholder="function(arg, arg, [...])" type="text" value=""> \
                             </div> \
-                            <div class="col-auto">= </div> \
-                            <div class="col-auto"> \
+                            <div class="col-1 text-center">= </div> \
+                            <div class="col-3"> \
                               <input id="tests-' + x + '-test_assert_result" name="tests-' + x + '-test_assert_result" class="form-control" placeholder="Résultat" type="text" value=""> \
                             </div> \
-                            <div class="col-auto"> \
+                            <div class="col-1"> \
                               <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                             </div> \
                             <span class="test-delete my-auto fas fa-trash-alt"></span> \
@@ -156,17 +154,17 @@
       var token = $(this).parent().parent().children('input:first-child').val();
       if($(this).val() == 'motif') {
         $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-2"> \
                                           <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
                                             <option value="assert">Assert</option> \
                                             <option value="script">Script</option> \
                                             <option value="motif" selected>Motif</option> \
                                           </select> \
                                         </div> \
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-8"> \
                                           <input id="tests-' + x + '-test_motif" class="form-control" name="tests-' + x + '-test_motif" placeholder="motif" type="text" value=""> \
                                         </div> \
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-1"> \
                                           <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                                         </div> \
                                         <span class="test-delete my-auto fas fa-trash-alt"></span>'
@@ -175,17 +173,17 @@
 
       if($(this).val() == 'script') {
         $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
-                                         <div class="col-auto"> \
+                                         <div class="col-sm-2"> \
                                             <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
                                               <option value="assert">Assert</option> \
                                               <option value="script" selected>Script</option> \
                                               <option value="motif">Motif</option> \
                                             </select> \
                                           </div> \
-                                          <div class="col-auto"> \
+                                          <div class="col-sm-8"> \
                                             <input id="tests-' + x + '-script" class="form-control-file" name="tests-' + x + '-test_script" type="file"> \
                                           </div> \
-                                          <div class="col-auto"> \
+                                          <div class="col-sm-1"> \
                                             <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                                           </div> \
                                           <span class="test-delete my-auto fas fa-trash-alt"></span>'
@@ -194,21 +192,21 @@
                 
       if($(this).val() == 'assert') {
         $(this).parent().parent().html('<input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + token + '">\
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-2"> \
                                           <select id="tests-' + x + '-test_type" class="form-control test-type" name="tests-' + x + '-test_type"> \
                                             <option value="assert" selected >Assert</option> \
                                             <option value="script">Script</option> \
                                             <option value="motif">Motif</option> \
                                           </select> \
                                         </div> \
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-4"> \
                                           <input id="tests-' + x + '-test_assert_function" class="form-control" name="tests-' + x + '-test_assert_function" placeholder="function(arg, arg, [...])" type="text" value=""> \
                                         </div> \
-                                        <div class="col-auto">= </div> \
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-1 text-center">= </div> \
+                                        <div class="col-sm-3"> \
                                           <input id="tests-' + x + '-test_assert_result" name="tests-' + x + '-test_assert_result" class="form-control" placeholder="Résultat" type="text" value=""> \
                                         </div> \
-                                        <div class="col-auto"> \
+                                        <div class="col-sm-1"> \
                                           <input class="form-control" id="tests-' + x + '-test_points" name="tests-' + x + '-test_points" placeholder="Points" type="text" value=""> \
                                         </div> \
                                         <span class="test-delete my-auto fas fa-trash-alt"></span>'

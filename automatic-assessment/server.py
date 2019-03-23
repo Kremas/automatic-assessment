@@ -360,7 +360,6 @@ def upload():
         - chemin: /import
     '''
     form = FullForm()
-    print(form.tests[4])
 
     if form.validate_on_submit():
         for elem in form.tests:
