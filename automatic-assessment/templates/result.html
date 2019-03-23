@@ -17,6 +17,7 @@
       {% for elem in result %}
         <div class="text-center">
           <h4>{{ elem }}</h4>
+          <h4>{{ result[elem]['total'] }}</h4>
         </div>
         <div class="p-2">
           {% if result[elem]['docker'] is defined %}

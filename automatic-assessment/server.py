@@ -407,7 +407,6 @@ def upload():
 
             if bool(d):
                 for elem in d.ret:
-                    print("HAHAHAHAHA")
                     print(json.loads(d.ret[elem])[1])
                     result[elem]['docker'] = json.loads(d.ret[elem])[1]
                     result[elem]['docker']['total'] = json.loads(d.ret[elem])[0]['total']
@@ -416,8 +415,12 @@ def upload():
                 m = Motif(root, os.path.join('saved_test', form.name.data, elem))
                 # print(m.search())
                 result[elem]['motif'] = m.search()
-            pprint(result)
-
+                res = 0
+                for key, val in result[elem]['motif'].items():
+                    res += float(val)
+                result[elem]['motif']['total'] = res
+                result[elem]['total'] = float(result[elem]['docker']['total']) + res
+                print(result[elem]['total'])
 
         return render_template('result.html', result=result)
     else:

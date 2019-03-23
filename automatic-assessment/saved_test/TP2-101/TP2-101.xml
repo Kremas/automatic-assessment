@@ -46,7 +46,7 @@
   </test>
   <test>
     <type>motif</type>
-    <motif>public static (((double))|((float))) divide</motif>
+    <motif>public static (((double))|((float))) divide\(int [[:alnum:]]+,[ ]*int [[:alnum:]]+\)</motif>
     <points>4.00</points>
   </test>
 </tp>
