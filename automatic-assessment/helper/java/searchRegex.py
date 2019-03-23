@@ -11,6 +11,7 @@ class Motif(object):
         self.class_name = class_name
         self.root = xml
         self.motif = {}
+
         for elem in self.root:
             if(elem.tag == 'test'):
                 if(elem.find('type').text == 'motif'):
@@ -20,11 +21,16 @@ class Motif(object):
         java_file = open(self.class_name, 'r')
         filetext = java_file.read()
         java_file.close()
-        points_etudiant = 0
+        res = {}
         for key, value in self.motif.items():
-            if(re.findall(key, filetext)):
-                points_etudiant += float(value)
-        return self.motif
+            if re.search(key, filetext):
+                print(re.search(key, filetext))
+                print(value)
+                print('Hbbbbbbbbbbbbbb')
+                res[key] = value
+            else:
+                res[key] = 0
+        return (res)
 
 
 if __name__ == '__main__':

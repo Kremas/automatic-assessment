@@ -418,8 +418,12 @@ def upload():
                 res = 0
                 for key, val in result[elem]['motif'].items():
                     res += float(val)
+
                 result[elem]['motif']['total'] = res
-                result[elem]['total'] = float(result[elem]['docker']['total']) + res
+
+                result[elem]['total'] = res
+                if 'docker' in result[elem]:
+                    result[elem]['total'] += float(result[elem]['docker']['total'])
                 print(result[elem]['total'])
 
         return render_template('result.html', result=result)

@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf8'?>
 <tp>
   <name>TP2-101</name>
-  <classname>test</classname>
+  <classname>MaClasse</classname>
   <codes>test.zip</codes>
   <subject/>
   <langage>java</langage>
   <compilation>
-    <command>javac test.java</command>
+    <command>javac MaClasse.java</command>
     <point>2.00</point>
   </compilation>
   <test>
@@ -35,7 +35,7 @@
   </test>
   <test>
     <type>motif</type>
-    <motif>public static double divide</motif>
+    <motif>public static int add</motif>
     <points>2.00</points>
   </test>
   <test>
@@ -46,7 +46,7 @@
   </test>
   <test>
     <type>motif</type>
-    <motif>public static (((double))|((float))) divide\(int [[:alnum:]]+,[ ]*int [[:alnum:]]+\)</motif>
+    <motif>public static ((float)|(double)) divide[ ]*\(int [\w],[ ]*int [\w]\)</motif>
     <points>4.00</points>
   </test>
 </tp>
