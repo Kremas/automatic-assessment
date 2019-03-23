@@ -6,19 +6,21 @@ public class TestRunner {
 	public static void main(String[] args) {
 		Result result = JUnitCore.runClasses(TACTACTAChaha.class);
 
-		System.out.println("<result>");
-		System.out.println("<testrun>" + result.getRunCount() + "</testrun>");
-		System.out.println("  <failure>");
+		System.out.print("{");
+		System.out.print("\"testrun\":\"" + result.getRunCount() + "\",");
+		System.out.print("\"failure\":[");
 
-
+		int size = result.getFailureCount();
 		for(Failure failure : result.getFailures()) {
-			System.out.println("    <test>");
-			System.out.println("      <function>" + failure.getDescription() + "</function>");
-			System.out.println("      <message>" + failure.getMessage() + "</message>");
-			System.out.println("    </test>");
+			// System.out.print("\"test\":{},");
+			System.out.print("{\"function\":\"" + failure.getDescription() + "\",");
+			System.out.println("\"message\":\"" + failure.getMessage() + "\"}");
+			if(--size != 0) {
+				System.out.print(",");
+			}
 		}
-		System.out.println("  </failure>");
-		System.out.println("<success>" + result.wasSuccessful() + "</success>");
-		System.out.println("</result>");
+		System.out.print("],");
+		System.out.print("\"success\":\"" + result.wasSuccessful() + "\"");
+		System.out.println("}]");
 	}
 }

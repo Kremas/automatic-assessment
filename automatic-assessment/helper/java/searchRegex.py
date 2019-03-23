@@ -24,7 +24,7 @@ class Motif(object):
         for key, value in self.motif.items():
             if(re.findall(key, filetext)):
                 points_etudiant += float(value)
-        return (key, points_etudiant)
+        return self.motif
 
 
 if __name__ == '__main__':

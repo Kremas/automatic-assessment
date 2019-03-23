@@ -15,9 +15,45 @@
     {% include 'nav.html' %}
     <div class="container">
       {% for elem in result %}
-        <div><h4>{{ elem }}</h4></div>
-        <div><h5>Assert</h3>{{ result[elem]["docker"] }}</div>
-        <div><h5>Motifs</h3>{{ result[elem]["motif"][0] }} : {{ result[elem]["motif"][1] }} points</div>
+        <div class="text-center">
+          <h4>{{ elem }}</h4>
+        </div>
+        <div class="p-2">
+          {% if result[elem]['docker'] is defined %}
+            <h5>Assert</h3>
+            <div>
+              <span>Tests effectués:</span>
+              <span>{{ result[elem]['docker']['testrun'] }}</span>
+            </div>
+            <div>
+              <span>Echec:</span>
+              {% if result[elem]['docker']['failure'][0] is not defined %}
+                <span>Aucun</span>
+              {% endif %}
+              {% for fail in result[elem]['docker']['failure'] %}
+              <ul>
+                <li>
+                  <span>{{ fail['function'] }}</span>
+                  <span>{{ fail['message'] }}</span>
+                </li>
+              </ul>
+              {% endfor %}
+              <div>
+                <span>Total:</span>
+                <span> {{ result[elem]['docker']['total'] }}</span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        <div class="p-2">
+          <h5>Motifs</h5>
+          {% for key, val in result[elem]["motif"].items() %}
+          <div>
+            <span>{{ key }}</span>
+            <span>{{ val }}</span>
+          </div>
+          {% endfor %}
+        </div>
       {% endfor %}
     </div>
   </body>

@@ -1,5 +1,5 @@
 __pycache__
 *.class
 docs/build/
-automatic-assessment/saved_test/
+automatic-assessment/saved_test/*
 !automatic-assessment/saved_test/*/*.xml

@@ -23,6 +23,9 @@ class dockerJava(object):
                                             tag='correction-java',
                                             quiet=False
                                             )
+        for elem in l:
+            if 'stream' in elem:
+                print(elem['stream'].strip())
         self.ret = {}
         for elem in codes:
             vol = {path.join(getcwd(), 'saved_test', name, path.dirname(elem)): {'bind': '/src', 'mode': 'rw'}}
@@ -33,7 +36,8 @@ class dockerJava(object):
                                                        stdout=True,
                                                        stderr=True,
                                                        volumes=vol)
-                self.ret[elem] = {}
-                self.ret[elem]['docker'] = container.decode('utf-8')
+                print(elem)
+                print(container.decode('utf-8'))
+                self.ret[elem] = container.decode('utf-8')
             except Exception as e:
                 print(e)

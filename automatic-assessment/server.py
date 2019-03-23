@@ -12,6 +12,7 @@ import re
 import zipfile
 import docker
 from pprint import pprint
+import json
 
 from helper.c import xmlCClass
 from helper.cisco import *
@@ -397,15 +398,28 @@ def upload():
         if form.langage.data == 'java':
             s = Java(root, form.classname.data)
             s.convert()
+            result = {}
             for elem in codes_list:
+                result[elem] = {}
                 s.toFile(path=os.path.join('saved_test', request.form.get('name'), os.path.dirname(elem)))
+
             d = dockerJava(codes_list, form.classname.data, form.name.data)
+
+            if bool(d):
+                for elem in d.ret:
+                    print("HAHAHAHAHA")
+                    print(json.loads(d.ret[elem])[1])
+                    result[elem]['docker'] = json.loads(d.ret[elem])[1]
+                    result[elem]['docker']['total'] = json.loads(d.ret[elem])[0]['total']
 
             for elem in codes_list:
                 m = Motif(root, os.path.join('saved_test', form.name.data, elem))
-                d.ret[elem]['motif'] = m.search()
+                # print(m.search())
+                result[elem]['motif'] = m.search()
+            pprint(result)
 
-        return render_template('result.html', result=d.ret)
+
+        return render_template('result.html', result=result)
     else:
         return render_template('test.html', form=form, error=form.errors)
 

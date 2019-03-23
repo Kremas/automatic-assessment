@@ -13,7 +13,7 @@
     <type>assert</type>
     <function>add(1, 2)</function>
     <result>3</result>
-    <points>2.00</points>
+    <points>1.00</points>
   </test>
   <test>
     <type>assert</type>
@@ -25,17 +25,28 @@
     <type>assert</type>
     <function>sub(5, 2)</function>
     <result>3</result>
-    <points>2.00</points>
+    <points>3.00</points>
   </test>
   <test>
     <type>assert</type>
     <function>divide(6, 2)</function>
     <result>3</result>
-    <points>2.00</points>
+    <points>4.00</points>
   </test>
   <test>
     <type>motif</type>
     <motif>public static double divide</motif>
     <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>divide(6, 0)</function>
+    <result>0</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>motif</type>
+    <motif>public static (((double))|((float))) divide</motif>
+    <points>4.00</points>
   </test>
 </tp>

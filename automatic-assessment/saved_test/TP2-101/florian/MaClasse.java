@@ -14,9 +14,9 @@ public class MaClasse{
     return res;
   }
 
-  public static double divide(int a, int b) {
+  public static float divide(int a, int b) {
     double res;
-    res = a / b;
+    res = a / b / a;
     return res;
   }
 
