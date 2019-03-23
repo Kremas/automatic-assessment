@@ -14,12 +14,12 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../correction-reseau'))
-sys.path.insert(0, os.path.abspath('../../correction-java'))
-sys.path.insert(0, os.path.abspath('../../correction-c'))
-sys.path.insert(0, os.path.abspath('../../correction-py'))
-sys.path.insert(0, os.path.abspath('../../wtform'))
-sys.path.insert(0, os.path.abspath('../../docker'))
+sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/cisco'))
+sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/python'))
+sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/c'))
+sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/java'))
+sys.path.insert(0, os.path.abspath('../../automatic-assessment/'))
+#sys.path.insert(0, os.path.abspath('../../docker'))
 
 
 # -- Project information -----------------------------------------------------
