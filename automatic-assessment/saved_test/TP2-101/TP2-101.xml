@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf8'?>
 <tp>
   <name>TP2-101</name>
-  <classname>MaClasse</classname>
+  <classname>test</classname>
   <codes>test.zip</codes>
   <subject/>
   <langage>java</langage>
   <compilation>
-    <command>javac MaClasse.java</command>
+    <command>javac test.java</command>
     <point>2.00</point>
   </compilation>
   <test>
@@ -31,6 +31,11 @@
     <type>assert</type>
     <function>divide(6, 2)</function>
     <result>3</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>motif</type>
+    <motif>public static double divide</motif>
     <points>2.00</points>
   </test>
 </tp>

@@ -33,7 +33,7 @@ class dockerJava(object):
                                                        stdout=True,
                                                        stderr=True,
                                                        volumes=vol)
-
-                self.ret[elem] = container.decode('utf-8')
+                self.ret[elem] = {}
+                self.ret[elem]['docker'] = container.decode('utf-8')
             except Exception as e:
                 print(e)

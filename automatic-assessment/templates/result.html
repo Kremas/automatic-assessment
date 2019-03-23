@@ -15,8 +15,9 @@
     {% include 'nav.html' %}
     <div class="container">
       {% for elem in result %}
-        <div>{{ elem }}</div>
-        <div>{{ result[elem] }}</div>
+        <div><h4>{{ elem }}</h4></div>
+        <div><h5>Assert</h3>{{ result[elem]["docker"] }}</div>
+        <div><h5>Motifs</h3>{{ result[elem]["motif"][0] }} : {{ result[elem]["motif"][1] }} points</div>
       {% endfor %}
     </div>
   </body>

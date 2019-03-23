@@ -104,10 +104,10 @@
       $('.liste').toggle();
     })
 
-    var x = 0;
+    var x = $('#form').find('.test-type').length-1
     $("#more-button").click(function(e){
-      x++;
       e.preventDefault();
+      x++;
       $(".tests").append('<div class="test form-row form-group"> \
                             <input type="hidden" d="tests-' + x + '-csrf_token" class="form-control" name="tests-' + x + '-csrf_token" value="' + $(".tests div:first-child input").val() + '">\
                             <div class="col-auto"> \

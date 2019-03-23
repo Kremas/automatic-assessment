@@ -11,11 +11,13 @@ import os
 import re
 import zipfile
 import docker
+from pprint import pprint
 
 from helper.c import xmlCClass
 from helper.cisco import *
 from helper.java.xmlJavaClass import Java
 from helper.java.dockerJava import dockerJava
+from helper.java.searchRegex import Motif
 from helper.python import xmlPythonClass
 
 server = Flask(__name__)
@@ -287,6 +289,7 @@ class FullForm(FlaskForm):
             self.tests.append_entry(FieldList(TestForm()))
             # Dégueulasse, mais necessaire, car append_entry ne passe pas les données et on ne peut pas remplacer l'objet
             self.tests[idx].test_type.data = t.test_type.data
+            print(t.test_type.data)
             self.tests[idx].test_assert_function.data = t.test_assert_function.data
             self.tests[idx].test_assert_result.data = t.test_assert_result.data
             self.tests[idx].test_motif.data = t.test_motif.data
@@ -356,6 +359,7 @@ def upload():
         - chemin: /import
     '''
     form = FullForm()
+    print(form.tests[4])
 
     if form.validate_on_submit():
         for elem in form.tests:
@@ -367,6 +371,7 @@ def upload():
                     return render_template('test.html', form=form, error="file required")
 
         root = form.toXml()
+
         if form.codes.data != '':
             f = secure_filename(form.codes.data.filename)
         elif form.codes_saved.data != '':
@@ -383,7 +388,7 @@ def upload():
             for elem in all_list:
                 if elem[-1] != '/':
                     codes_list.append(elem)
-            print(codes_list)
+            # print(codes_list)
             z.extractall(path=os.path.join('saved_test', request.form.get('name')))
         else:
             codes_list = []
@@ -395,6 +400,10 @@ def upload():
             for elem in codes_list:
                 s.toFile(path=os.path.join('saved_test', request.form.get('name'), os.path.dirname(elem)))
             d = dockerJava(codes_list, form.classname.data, form.name.data)
+
+            for elem in codes_list:
+                m = Motif(root, os.path.join('saved_test', form.name.data, elem))
+                d.ret[elem]['motif'] = m.search()
 
         return render_template('result.html', result=d.ret)
     else:
@@ -409,8 +418,8 @@ def uploadCisco():
         - chemin: /importcisco
     '''
     form = FullCiscoForm()
-    print(form.validate_on_submit())
-    print(form.errors)
+    # print(form.validate_on_submit())
+    # print(form.errors)
     result = ""
     if form.validate_on_submit():
         root = form.toXml()
@@ -441,7 +450,7 @@ def save():
                             xml_declaration=True,
                             encoding='utf8',
                             pretty_print=True).decode('utf-8')
-    print(result)
+    # print(result)
 
     path = os.path.normpath(form.name.data)
     sanitize_path = re.search('([A-Za-z0-9-_]+)', path)
