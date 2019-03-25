@@ -44,6 +44,14 @@ Prérequis
    * sphinx (documentation)
    * sphinx_rtd_theme (documentation)
 
+* CUnit
+  
+   * libcunit1
+   * libcunit1-doc
+   * libcunit1-dev
+
+* JUnit
+
 .. toctree::
    :maxdepth: 3
    :caption: Contenu
