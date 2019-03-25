@@ -29,9 +29,24 @@ Ce projet s’insère dans une trajectoire de modernisation et de simplification
 Documentation
 =============
 
+Prérequis
+---------
+
+* docker
+* python 3
+* pip
+  
+   * flask
+   * flask_wtf
+   * lxml
+   * docker
+   * ciscoconfparse
+   * sphinx (documentation)
+   * sphinx_rtd_theme (documentation)
+
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Contenu
 
    architecture
    form
