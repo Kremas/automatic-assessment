@@ -61,7 +61,7 @@ class C(object):
 
     def __init__(self, xml, classname, path='.'):
 
-        c_header = path + "/" + classname + '.h'
+        c_header = 'myapp' + "/" + classname + '.h'
         self.classname = classname
         self.header = ("#include <stdio.h>\n"
                        "#include <math.h>\n"
