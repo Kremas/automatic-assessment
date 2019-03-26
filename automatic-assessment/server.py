@@ -428,6 +428,7 @@ def upload():
             return render_template('test.html', form=form, error={'Langage': 'Non reconnu'})
 
         for elem in codes_list:
+            print(elem)
             m = Motif(root, os.path.join('saved_test', form.name.data, elem))
             print(m.search())
             result[elem]['motif'] = m.search()

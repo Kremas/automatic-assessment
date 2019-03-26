@@ -24,9 +24,6 @@ class Motif(object):
         res = {}
         for key, value in self.motif.items():
             if re.search(key, filetext):
-                print(re.search(key, filetext))
-                print(value)
-                print('Hbbbbbbbbbbbbbb')
                 res[key] = value
             else:
                 res[key] = 0
