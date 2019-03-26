@@ -52,6 +52,27 @@ class C(object):
 
         Il est possible de vérifier des configurations d'interface, OSPF,
         IS-IS, EIGRP, RIP, BGP, line
+
+        Comment ça marche ?
+        Pour chaque 'enfant', on va chercher une liste des parents. Par exemple
+        si 'transport input ssh' et 'login local' sont des motifs recherchés
+        et sont configurés sur 'line vty 0 4' et 'line vty 5 15', alors on sort
+        une liste l_result qui contient ces deux derniers.
+
+        [[line vty 0 4, line vty 5 15], [line vty 0 4, line vty 5 15]]
+
+        Si 'login local' n'est pas rentré sur 'line vty 5 15', alors la liste
+        sera
+
+        [[line vty 0 4, line vty 5 15], [line vty 0 4]]
+
+        Puis on vérifie que le 'parent' du formulaire est bien présent dans
+        chaque liste l dans l_result.
+        Pourquoi l_result contient des listes ? Parce que
+        'find_parents_w_child' ressort tous les parents qui contiennent le
+        motif recherchés, on doit donc vérifier que notre parent est présent
+        dans chaque liste, pour s'assurer que toutes les motifs enfants sont
+        bien rentrés sous ce parent.
         """
         result = node.find('parent').text
         l_result = []
@@ -108,6 +129,6 @@ class C(object):
 
 
 if __name__ == '__main__':
-    obj = C('check_run_conf.xml', 'S2.txt')
+    obj = C('check_run_conf.xml', 'R2.txt')
     obj.print_xml()
     print(obj.assess())

@@ -1,21 +1,19 @@
 <tp>
   <test>
     <type>misc</type>
-    <motif>hostname S2</motif>
-    <motif>ip routing</motif>
+    <motif>hostname R2</motif>
     <points>1</points>
   </test>
   <test>
-    <type>line configuration</type>
-    <parent>line vty 0 4</parent>
-    <motif>login local</motif>
-    <motif>transport input ssh</motif>
+    <type>interface</type>
+    <parent>interface FastEthernet0/1</parent>
+    <motif>ip address 10.5.22.1 255.255.255.252</motif>
     <points>2</points>
   </test>
   <test>
-    <type>line configuration</type>
-    <parent>line con 0</parent>
-    <motif>logging synchronous</motif>
-    <points>1</points>
+    <type>router ospf</type>
+    <parent>router ospf 1</parent>
+    <motif>network 10.5.22.0 0.0.0.3 area 0</motif>
+    <points>5</points>
   </test>
 </tp>

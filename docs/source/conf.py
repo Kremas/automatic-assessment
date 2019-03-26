@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/cisco'))
 sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/python'))
 sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/c'))
 sys.path.insert(0, os.path.abspath('../../automatic-assessment/helper/java'))
+sys.path.insert(0, os.path.abspath('../../correction-reseau'))
 sys.path.insert(0, os.path.abspath('../../automatic-assessment/'))
 #sys.path.insert(0, os.path.abspath('../../docker'))
 
