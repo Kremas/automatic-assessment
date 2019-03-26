@@ -54,7 +54,7 @@ Prérequis
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contenu
+   :caption: Sommaire
 
    architecture
    form
