@@ -15,7 +15,8 @@ from pprint import pprint
 import json
 from shutil import rmtree
 
-from helper.c import xmlCClass
+from helper.c.xmlCClass import C
+from helper.c.dockerC import dockerC
 from helper.cisco import *
 from helper.java.xmlJavaClass import Java
 from helper.java.dockerJava import dockerJava
@@ -395,12 +396,14 @@ def upload():
             codes_list = []
             codes_list.append(f)
 
+        result = {}
+        for elem in codes_list:
+            result[elem] = {}
+
         if form.langage.data == 'java':
             s = Java(root, form.classname.data)
             s.convert()
-            result = {}
             for elem in codes_list:
-                result[elem] = {}
                 s.toFile(path=os.path.join('saved_test', request.form.get('name'), os.path.dirname(elem)))
 
             d = dockerJava(codes_list, form.classname.data, form.name.data)
@@ -411,20 +414,33 @@ def upload():
                     result[elem]['docker'] = json.loads(d.ret[elem])[1]
                     result[elem]['docker']['total'] = json.loads(d.ret[elem])[0]['total']
 
-            for elem in codes_list:
-                m = Motif(root, os.path.join('saved_test', form.name.data, elem))
-                # print(m.search())
-                result[elem]['motif'] = m.search()
-                res = 0
-                for key, val in result[elem]['motif'].items():
-                    res += float(val)
+        elif form.langage.data == 'c':
+            s = C(root, form.classname.data)
+            s.convert()
+            s.toFile(path=os.path.join('saved_test', request.form.get('name')))
 
-                result[elem]['motif']['total'] = res
+            d = dockerC(codes_list, form.classname.data, form.name.data)
 
-                result[elem]['total'] = res
-                if 'docker' in result[elem]:
-                    result[elem]['total'] += float(result[elem]['docker']['total'])
-                print(result[elem]['total'])
+            if bool(d):
+                for elem in d.ret:
+                    print(d.ret[elem])
+        else:
+            return render_template('test.html', form=form, error={'Langage': 'Non reconnu'})
+
+        for elem in codes_list:
+            m = Motif(root, os.path.join('saved_test', form.name.data, elem))
+            print(m.search())
+            result[elem]['motif'] = m.search()
+            res = 0
+            for key, val in result[elem]['motif'].items():
+                res += float(val)
+
+            result[elem]['motif']['total'] = res
+
+            result[elem]['total'] = res
+            if 'docker' in result[elem]:
+                result[elem]['total'] += float(result[elem]['docker']['total'])
+            print(result[elem]['total'])
 
         return render_template('result.html', result=result)
     else:

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf8'?>
+<tp>
+  <name>TP2-103-C</name>
+  <classname>calc</classname>
+  <codes>test-c.zip</codes>
+  <subject/>
+  <langage>c</langage>
+  <compilation>
+    <command>make</command>
+    <point>2.00</point>
+  </compilation>
+  <test>
+    <type>assert</type>
+    <function>add(1, 2)</function>
+    <result>3</result>
+    <points>1.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>add(0, 2)</function>
+    <result>2</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>sub(5, 2)</function>
+    <result>3</result>
+    <points>3.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>divide(6, 2)</function>
+    <result>3</result>
+    <points>4.00</points>
+  </test>
+  <test>
+    <type>motif</type>
+    <motif>int add(int a, int b)</motif>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>assert</type>
+    <function>divide(6, 0)</function>
+    <result>0</result>
+    <points>2.00</points>
+  </test>
+  <test>
+    <type>motif</type>
+    <motif>((float)|(double)) divide(int a, int b)</motif>
+    <points>4.00</points>
+  </test>
+</tp>

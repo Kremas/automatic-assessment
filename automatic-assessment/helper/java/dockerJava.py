@@ -21,7 +21,8 @@ class dockerJava(object):
         (img, l) = self.client.images.build(path='.',
                                             dockerfile=path.join('saved_test', name, 'dockerfile'),
                                             tag='correction-java',
-                                            quiet=False
+                                            quiet=False,
+                                            rm=True
                                             )
         for elem in l:
             if 'stream' in elem:

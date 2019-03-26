@@ -59,9 +59,9 @@ class C(object):
 
     '''
 
-    def __init__(self, xml_path, classname, path='.'):
+    def __init__(self, xml, classname, path='.'):
 
-        c_header = path + "/" + classname + '.h'
+        c_header = 'myapp' + "/" + classname + '.h'
         self.classname = classname
         self.header = ("#include <stdio.h>\n"
                        "#include <math.h>\n"
@@ -110,7 +110,7 @@ class C(object):
                        )
         self.case_functions = ""
         self.add_suite = ""
-        self.root = etree.parse(xml_path).getroot()  # Get the XML
+        self.root = xml
         self.compilation = self.root.find('compilation')
         self.func = {}
 
